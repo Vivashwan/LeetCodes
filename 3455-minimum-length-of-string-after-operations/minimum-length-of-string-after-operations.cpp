@@ -12,12 +12,12 @@ public:
         
         int res = 0;
         
-        for(auto it : mp)
+        for(auto it: mp)
         {
             int val = it.second;
-            res += (val%2) ? val - 1 : val - 2;
+            res += (val%2) ?  1 :  2;
         }
-        
-        return n - res;
+
+        return res;
     }
 };
