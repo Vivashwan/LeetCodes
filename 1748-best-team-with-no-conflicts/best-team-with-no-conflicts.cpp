@@ -9,28 +9,22 @@ public:
         
         sort(vc.begin(), vc.end());
 
-        vector<vector<int>> memo(n, vector<int>(n, -1)); // Memoization table
-        return highestScore(vc, 0, -1, memo);
+        return highestScore(n, vc);
     }
 
-    int highestScore(vector<pair<int, int>>& vc, int currentIndex, int lastIndex, vector<vector<int>>& memo) {
-        if (currentIndex == vc.size())
-            return 0;
-        
-        if (lastIndex != -1 && memo[currentIndex][lastIndex] != -1)
-            return memo[currentIndex][lastIndex];
+    int highestScore(int n, vector<pair<int, int>> &vc) {
+        int maxScore = 0;
+        vector<int> dp(n);
 
-        int include = 0;
-        if (lastIndex == -1 || vc[currentIndex].second >= vc[lastIndex].second) {
-            include = vc[currentIndex].second + highestScore(vc, currentIndex + 1, currentIndex, memo);
+        for (int i = 0; i < n; ++i) {
+            dp[i] = vc[i].second;
+            
+            for (int j = i - 1; j >= 0; --j) 
+                if (vc[i].second >= vc[j].second)
+                    dp[i] = max(dp[i], dp[j] + vc[i].second);
+            
+            maxScore = max(maxScore, dp[i]);
         }
-        
-        int exclude = highestScore(vc, currentIndex + 1, lastIndex, memo);
-        
-        int maxScore = max(include, exclude);
-
-        if (lastIndex != -1)
-            memo[currentIndex][lastIndex] = maxScore;
 
         return maxScore;
     }
