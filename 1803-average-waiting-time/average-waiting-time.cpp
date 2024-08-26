@@ -2,8 +2,7 @@ class Solution {
 public:
     double averageWaitingTime(vector<vector<int>>& customers) {
         int n = customers.size();
-        vector<int>res;
-
+        double ans = 0;
         int start=customers[0][0];
 
         for(int i=0; i<n; i++)
@@ -17,14 +16,7 @@ public:
 
             start+=time;
 
-            res.push_back(start-arrival);
-        }
-
-        double ans = 0;
-
-        for(auto it: res)
-        {
-            ans+=(double)it;
+            ans+=(double)(start-arrival);
         }
 
         return (double)ans/n;
