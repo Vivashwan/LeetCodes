@@ -1,4 +1,4 @@
-<h2><a href="https://leetcode.com/problems/ways-to-split-array-into-three-subarrays">Ways to Split Array Into Three Subarrays</a></h2> <img src='https://img.shields.io/badge/Difficulty-Medium-orange' alt='Difficulty: Medium' /><hr><p>A split of an integer array is <strong>good</strong> if:</p>
+<h2><a href="https://leetcode.com/problems/ways-to-split-array-into-three-subarrays/">1831. Ways to Split Array Into Three Subarrays</a></h2><h3>Medium</h3><hr><p>A split of an integer array is <strong>good</strong> if:</p>
 
 <ul>
 	<li>The array is split into three <strong>non-empty</strong> contiguous subarrays - named <code>left</code>, <code>mid</code>, <code>right</code> respectively from left to right.</li>
