@@ -13,6 +13,7 @@ public:
                 count++;
                 coins-=costs[i];
             }
+            else break;
         }
 
         return count;
