@@ -1,7 +1,7 @@
 class Solution {
 public:
     vector<bool> canMakePaliQueries(string s, vector<vector<int>>& queries) {
-        int n = s.size();
+        int n = s.length();
 
         vector<vector<int>>prefix(n+2, vector<int>(26, 0));
 
@@ -28,7 +28,7 @@ public:
             else
             {
                 int odd=0;
-                
+
                 for(int i=0; i<26; i++)
                 {
                     int count=prefix[right+1][i]-prefix[left][i];
@@ -36,7 +36,7 @@ public:
                     if(count%2!=0)
                     {
                         odd++;
-                    }    
+                    }
                 }
 
                 odd-=2*k;
@@ -48,7 +48,7 @@ public:
                 else res.push_back(true);
             }
         }
-
+        
         return res;
     }
 };
