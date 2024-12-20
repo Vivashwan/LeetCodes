@@ -4,29 +4,24 @@ private:
 public:
     int numOfSubarrays(vector<int>& arr) {
         int n = arr.size();
-
-        long long res = 0, countOdd = 0, countEven = 0, currSum = 0;
+        int sum = 0, count = 0, even = 0, odd = 0;
 
         for(int i=0; i<n; i++)
         {
-            currSum+=arr[i];
+            sum+=arr[i];
 
-            if(currSum%2==0)
+            if(sum%2!=0)
             {
-                res+=countOdd;
-
-                countEven++;
+                odd++, count++;
+                count = (count+even)%MOD;
             }
             else
             {
-                res+=countEven+1;
-
-                countOdd++;
+                even++;
+                count = (count+odd)%MOD;
             }
-
-            res%=MOD;
         }
 
-        return res;
+        return count%MOD;
     }
 };
