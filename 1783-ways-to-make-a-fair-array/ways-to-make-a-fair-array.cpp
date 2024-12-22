@@ -2,36 +2,38 @@ class Solution {
 public:
     int waysToMakeFair(vector<int>& nums) {
         int n = nums.size();
-        int odd = 0, even = 0, oddPref = 0, evenPref = 0, newOdd = 0, newEven = 0, res = 0;
+
+        int oddSum = 0, evenSum = 0, count = 0;
 
         for(int i=0; i<n; i++)
         {
             if(i%2==0)
             {
-                even+=nums[i];
+                evenSum+=nums[i];
             }
-            else odd+=nums[i];
+            else oddSum+=nums[i];
         }
 
         for(int i=0; i<n; i++)
-        {   
-            newOdd = evenPref + odd, newEven = oddPref + even;
-
+        {
             if(i%2==0)
-            {   
-                even-=nums[i], newEven-=nums[i], evenPref+=nums[i];
-            }
-            else
             {
-                odd-=nums[i], newOdd-=nums[i], oddPref+=nums[i];
+                evenSum-=nums[i];
+            }
+            else oddSum-=nums[i];
+            
+            if(evenSum==oddSum)
+            {
+                count++;
             }
 
-            if(newEven==newOdd)
+            if(i%2)
             {
-                res++;
+                evenSum+=nums[i];
             }
+            else oddSum+=nums[i];
         }
 
-        return res;
+        return count;
     }
 };
