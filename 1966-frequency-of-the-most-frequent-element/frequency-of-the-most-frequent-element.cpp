@@ -1,20 +1,21 @@
 class Solution {
 public:
     int maxFrequency(vector<int>& nums, int k) {
-        int maxim = 0;
-        long currSum = 0;
+        int n = nums.size();
 
         sort(nums.begin(), nums.end());
 
-        int left=0, right=0;
+        int left = 0, right = 0, maxim = INT_MIN;
 
-        while(right<nums.size())
+        long sum = 0;
+
+        while(right<n)
         {
-            currSum+=nums[right];
+            sum+=nums[right];
 
-            while(currSum+k < static_cast<long>(nums[right])*(right-left+1))
+            while(sum+k<static_cast<long>(nums[right])*(right-left+1))
             {
-                currSum-=nums[left];
+                sum-=nums[left];
                 left++;
             }
 
