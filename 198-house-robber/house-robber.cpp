@@ -1,28 +1,26 @@
 class Solution {
 private:
-    int func(int n, vector<int>&nums)
+    int func(int n, vector<int>&nums, vector<int>&dp)
     {
         int pick=0, notPick=0;
-        int curr=0, prev1=0, prev2=0;
 
         for(int ind=n-1; ind>=0; ind--)
         {
-            pick = nums[ind] + ((ind+2 < n+1) ? prev2:0);
+            pick = nums[ind] + dp[ind+2];
 
-            notPick = prev1;
+            notPick = dp[ind+1];
 
-            curr=max(pick, notPick);
-
-            prev2=prev1;
-            prev1=curr;
+            dp[ind]=max(pick, notPick);
         }
 
-        return prev1;
+        return dp[0];
     }
 public:
     int rob(vector<int>& nums) {
         int n = nums.size();
 
-        return func(n, nums);
+        vector<int>dp(n+2, 0);
+
+        return func(n, nums, dp);
     }
 };
