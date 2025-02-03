@@ -1,45 +1,55 @@
 class Solution {
 private:
-    bool isValid(string &str)
+    int func(string &s, int n, vector<int>&dp)
     {
-        if (str[0] == '0') return false;
-        int num = stoi(str);
-        return num >= 1 && num <= 26;
-    }
-    int func(string &s, int ind, int n, vector<int>&dp)
-    {
-        if(ind==n)
+        if(s[0]=='0') 
         {
-            return 1;
+            return 0;
         }
 
-        if(dp[ind]!=-1)
-        {
-            return dp[ind];
-        }
+        dp[n]=1;
 
         int count = 0;
 
         string str = "";
 
-        for(int i=ind; i<n && i<ind+2; i++)
+        for(int i=n-1; i>=0; i--)
         {
-            str+=s[i];
-
-            if(isValid(str))
+            if(s[i]=='0')
             {
-                count+=func(s, i+1, n, dp);
+                dp[i]=0;
+                continue;
             }
-        }   
 
-        return dp[ind]=count;
+            dp[i]=dp[i+1];
+
+            if(i+1<n) 
+            {
+                int twoDigit=stoi(s.substr(i, 2));
+
+                if(twoDigit>=10 && twoDigit<=26) 
+                {
+                    dp[i]+=dp[i+2];
+                }
+            }
+        }
+
+        return dp[0];
     }
 public:
     int numDecodings(string s) {
         int n = s.length();
 
-        vector<int>dp(n, -1);
+        vector<int>dp(n+1, 0);
 
-        return func(s, 0, n, dp);
+        int count = func(s, n, dp);
+
+        for(auto it: dp)
+        {
+            cout<<it<<" ";
+        }
+        cout<<endl;
+
+        return count;
     }
 };
