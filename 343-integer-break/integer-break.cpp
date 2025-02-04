@@ -1,32 +1,22 @@
 class Solution {
 private:
-    int func(int n, vector<int>&dp)
+    int func(int n, vector<int>& dp) 
     {
-        int maxi = -1;
-
-        if(n<=1)
-        {
-            return 0;
+        for(int i = 2; i <= n; i++) 
+        {  
+            int maxi = -1;
+            for(int j = 1; j < i; j++) 
+            { 
+                int product = max(j * (i - j), j * dp[i - j]);
+                maxi = max(maxi, product);
+            }
+            dp[i] = maxi; 
         }
-
-        if(dp[n]!=-1)
-        {
-            return dp[n];
-        }
-
-        for(int i=1; i<n; i++)
-        {
-            int product = i*(n-i);
-            product = max(product, i*func(n-i, dp));
-
-            maxi = max(maxi, product);
-        }
-
-        return dp[n] = maxi;
+        return dp[n]; 
     }
 public:
     int integerBreak(int n) {
-        vector<int>dp(n+1, -1);
+        vector<int> dp(n + 1, 0);
         return func(n, dp);
     }
 };
