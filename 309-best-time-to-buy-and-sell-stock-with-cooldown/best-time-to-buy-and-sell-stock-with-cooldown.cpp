@@ -1,7 +1,8 @@
 class Solution {
 private:
-    int func(vector<int>&prices, int n, vector<vector<int>>&dp)
+    int func(vector<int>&prices, int n)
     {
+        vector<int>next1(2, 0), next(2, 0), curr(2, 0);
         for(int ind=n-1; ind>=0; ind--)
         {
             for(int bought=0; bought<=1; bought++)
@@ -10,25 +11,26 @@ private:
 
                 if(bought==0)
                 {
-                    profit = max(dp[ind+1][1]-prices[ind], dp[ind+1][0]);
+                    profit = max(next[1]-prices[ind], next[0]);
                 }
                 else
                 {
-                    profit = max(dp[ind+2][0]+prices[ind], dp[ind+1][1]);
+                    profit = max(next1[0]+prices[ind], next[1]);
                 }
 
-                dp[ind][bought] = profit;
+                curr[bought] = profit;
             }
+
+            next1 = next;
+            next = curr;
         }
 
-        return dp[0][0];
+        return next[0];
     }
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
 
-        vector<vector<int>>dp(n+2, vector<int>(2, 0));
-
-        return func(prices, n, dp);
+        return func(prices, n);
     }
 };
