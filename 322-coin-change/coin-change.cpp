@@ -1,34 +1,38 @@
 class Solution {
 private:
-    int func(vector<int>&coins, int n, int ind, int amount, vector<vector<int>>&dp)
+    int func(vector<int>&coins, int n, int amount, vector<vector<int>>&dp)
     {
-        if(amount==0) 
+        for(int i=0; i<=n; i++)
         {
-            return 0;  
+            dp[i][0]=0;
         }
 
-        if(ind>=n || amount<0) 
+        for(int ind=n-1; ind>=0; ind--)
         {
-            return 1e9;
+            for(int val=0; val<=amount; val++)
+            {
+                int pick = 1e9;
+                int notPick = dp[ind+1][val];
+
+                if(val>=coins[ind])
+                {
+                    pick = 1+dp[ind][val-coins[ind]];
+                }
+
+                dp[ind][val] = min(pick, notPick);
+            }
+
         }
 
-        if(dp[ind][amount]!=-1)
-        {
-            return dp[ind][amount];
-        }
-
-        int pick = 1+func(coins, n, ind, amount-coins[ind], dp);
-        int notPick = 0+func(coins, n, ind+1, amount, dp);
-
-        return dp[ind][amount] = min(pick, notPick);
+        return dp[0][amount];
     }
 public:
     int coinChange(vector<int>& coins, int amount) {
         int n = coins.size();
 
-        vector<vector<int>>dp(n, vector<int>(amount+1, -1));
+        vector<vector<int>>dp(n+1, vector<int>(amount+1, 1e9));
 
-        int ans = func(coins, n, 0, amount, dp);
+        int ans = func(coins, n, amount, dp);
 
         return ans>=1e9?-1:ans;      
     }
