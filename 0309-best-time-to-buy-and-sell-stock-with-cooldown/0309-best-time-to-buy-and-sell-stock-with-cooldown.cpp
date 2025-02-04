@@ -1,36 +1,36 @@
 class Solution {
 private:
-    int func(vector<int>&prices, int n, int ind, bool bought, vector<vector<int>>&dp)
+    int func(vector<int>&prices, int n)
     {
-        if(ind>=n)
+        vector<int>next1(2, 0), next(2, 0), curr(2, 0);
+        for(int ind=n-1; ind>=0; ind--)
         {
-            return 0;
+            for(int bought=0; bought<=1; bought++)
+            {
+                int profit;
+
+                if(bought==0)
+                {
+                    profit = max(next[1]-prices[ind], next[0]);
+                }
+                else
+                {
+                    profit = max(next1[0]+prices[ind], next[1]);
+                }
+
+                curr[bought] = profit;
+            }
+
+            next1 = next;
+            next = curr;
         }
 
-        if(dp[ind][bought]!=-1)
-        {
-            return dp[ind][bought];
-        }
-
-        int profit = 0;
-
-        if(bought==false)
-        {
-            profit = max(func(prices, n, ind+1, true, dp)-prices[ind], func(prices, n, ind+1, false, dp));
-        }      
-        else
-        {
-            profit = max(func(prices, n, ind+2, false, dp)+prices[ind], func(prices, n, ind+1, true, dp));
-        }  
-
-        return dp[ind][bought] = profit;
+        return next[0];
     }
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
 
-        vector<vector<int>>dp(n, vector<int>(2, -1));
-
-        return func(prices, n, 0, false, dp);
+        return func(prices, n);
     }
 };
