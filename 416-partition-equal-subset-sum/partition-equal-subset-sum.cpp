@@ -2,25 +2,30 @@ class Solution {
 private:
     bool func(vector<int>&nums, int n, int ind, int amount, vector<vector<int>>&dp)
     {
-        if(amount==0)
+        for(int i=0; i<=n; i++)
         {
-            return true;
+            dp[i][0]=1;
         }
 
-        if(ind>=n || amount<0)
+        for(int ind=n-1; ind>=0; ind--)
         {
-            return false;
+            for(int val=1; val<=amount; val++)
+            {
+                bool pick = false;
+
+                if(val-nums[ind]>=0)
+                {
+                    pick = dp[ind+1][val-nums[ind]];
+                }
+
+                bool notPick = dp[ind+1][val];
+
+                dp[ind][val] = pick || notPick;
+
+            }
         }
 
-        if(dp[ind][amount]!=-1)
-        {
-            return dp[ind][amount];
-        }
-
-        bool pick = func(nums, n, ind+1, amount-nums[ind], dp);
-        bool notPick = func(nums, n, ind+1, amount, dp);
-
-        return dp[ind][amount] = pick||notPick;
+        return dp[0][amount];
     }
 public:
     bool canPartition(vector<int>& nums) {
@@ -33,7 +38,7 @@ public:
             return false;
         }
 
-        vector<vector<int>>dp(n, vector<int>((total/2)+1, -1));
+        vector<vector<int>>dp(n+1, vector<int>((total/2)+1, 0));
 
         return func(nums, n, 0, total/2, dp);
     }
