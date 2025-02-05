@@ -5,28 +5,26 @@ private:
         return a[1]<b[1];
     }
 
-    int func(vector<vector<int>>&pairs, int n, int ind, int prev, vector<vector<int>>&dp)
+    int func(vector<vector<int>>&pairs, int n, vector<vector<int>>&dp)
     {
-        if(ind==n)
+        for(int ind=n-1; ind>=0; ind--)
         {
-            return 0;
+            for(int prev=ind-1; prev>=-1; prev--)
+            {
+                int pick=0;
+
+                if(prev==-1 || pairs[prev][1]<pairs[ind][0])
+                {
+                    pick = 1+dp[ind+1][ind+1];
+                }
+
+                int notPick = 0+dp[ind+1][prev+1];
+
+                dp[ind][prev+1] = max(pick, notPick);
+            }
         }
 
-        if(dp[ind][prev+1]!=-1)
-        {
-            return dp[ind][prev+1];
-        }
-
-        int pick = 0;
-
-        if(prev==-1 || pairs[prev][1]<pairs[ind][0])
-        {
-            pick = 1+func(pairs, n, ind+1, ind, dp);
-        }
-
-        int notPick = 0+func(pairs, n, ind+1, prev, dp);
-
-        return dp[ind][prev+1] = max(pick, notPick);
+        return dp[0][0];
     }
 public:
     int findLongestChain(vector<vector<int>>& pairs) {
@@ -34,8 +32,8 @@ public:
 
         sort(pairs.begin(), pairs.end(), myCmp);
 
-        vector<vector<int>>dp(n+1, vector<int>(n+1, -1));
+        vector<vector<int>>dp(n+1, vector<int>(n+1, 0));
 
-        return func(pairs, n, 0, -1, dp);
+        return func(pairs, n, dp);
     }
 };
