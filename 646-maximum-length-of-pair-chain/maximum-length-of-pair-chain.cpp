@@ -2,7 +2,7 @@ class Solution {
 private:
     static bool myCmp(const vector<int>&a, const vector<int>&b)
     {
-        return a[1]<b[1];
+        return a[0]<b[0];
     }
 
     int func(vector<vector<int>>&pairs, int n, vector<vector<int>>&dp)
