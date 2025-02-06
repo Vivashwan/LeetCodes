@@ -4,36 +4,41 @@ private:
 
     vector<vector<int>>adj = {{4, 6}, {6, 8}, {7, 9}, {4, 8}, {3, 9, 0}, {}, {1, 7, 0}, {2, 6}, {1, 3}, {2, 4}};
 
-    int func(int n, int cell, vector<vector<int>>&dp)
+    void func(int n, vector<vector<int>>&dp)
     {
-        if(n==0)
+        for(int cell=0; cell<=9; cell++)
         {
-            return 1;
+            dp[0][cell]=1;
         }
 
-        if(dp[n][cell]!=-1)
+        for(int i=1; i<n; i++)
         {
-            return dp[n][cell];
+            for(int cell=0; cell<=9; cell++)
+            {
+                int res=0;
+
+                for(auto it: adj[cell])
+                {
+                    res=(res+dp[i-1][it])%(MOD);
+                }
+
+                dp[i][cell] = res;
+            }
         }
 
-        int res=0;
-
-        for(auto it: adj[cell])
-        {
-            res=(res+func(n-1, it, dp))%(MOD);
-        }
-
-        return dp[n][cell] = res;
+        return;
     }
 public:
     int knightDialer(int n) {
-        vector<vector<int>>dp(5001, vector<int>(10, -1));
+        vector<vector<int>>dp(5002, vector<int>(11, 0));
 
         int res=0;
 
+        func(n, dp);
+
         for(int cell=0; cell<=9; cell++)
         {
-            res=(res+func(n-1, cell, dp))%MOD;
+            res=(res+dp[n-1][cell])%MOD;
         }
 
         return res;
