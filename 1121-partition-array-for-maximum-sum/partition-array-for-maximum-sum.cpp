@@ -1,39 +1,33 @@
 class Solution {
 private:
-    int func(vector<int>&arr, int n, int k, int ind, vector<int>&dp)
+    int func(vector<int>&arr, int n, int k, vector<int>&dp)
     {
-        if(ind==n)
+        for(int ind=n-1; ind>=0; ind--)
         {
-            return 0;
+            int maxi=INT_MIN, len=0, maxSum=INT_MIN;
+
+            for(int i=ind; i<min(ind+k, n); i++)
+            {
+                len++;
+
+                maxi = max(maxi, arr[i]);
+
+                int sum = len*maxi + dp[i+1];
+
+                maxSum = max(maxSum, sum);
+            }
+
+            dp[ind] = maxSum;
         }
 
-        if(dp[ind]!=-1)
-        {
-            return dp[ind];
-        }
-
-        int maxi=INT_MIN, len=0, maxSum=INT_MIN;
-
-        for(int i=ind; i<min(ind+k, n); i++)
-        {
-            len++;
-
-            maxi = max(maxi, arr[i]);
-
-            int sum = len*maxi + func(arr, n, k, i+1, dp);
-
-            maxSum = max(maxSum, sum);
-        }
-
-        return dp[ind] = maxSum;
-
+        return dp[0];
     }
 public:
     int maxSumAfterPartitioning(vector<int>& arr, int k) {
         int n = arr.size();
 
-        vector<int>dp(n+1, -1);
+        vector<int>dp(n+1, 0);
 
-        return func(arr, n, k, 0, dp);
+        return func(arr, n, k, dp);
     }
 };
