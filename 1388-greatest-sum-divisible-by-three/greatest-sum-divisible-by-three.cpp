@@ -1,30 +1,24 @@
 class Solution {
 public:
-    int solve(int i, vector<int>&nums, int r, int n, vector<vector<int>>&dp)
-    {
-        if(i==n)
-        {
-            if(r==0)
-            {
-                return 0;
-            }
-            return -1000000;
-        }
-
-        if(dp[i][r]!=-1)
-        {
-            return dp[i][r];
-        }
+    int maxSumDivThree(vector<int>& vec) {
         
-        int op1 = nums[i]+solve(i+1,nums,(r+nums[i])%3, n, dp);
-        int op2 = solve(i+1,nums,r, n, dp);
+        int n=vec.size();
 
-        return dp[i][r] = max(op1, op2);
+        vector<vector<int>>dp(n+1, vector<int>(3));
+    
+        dp[0][0]=0, dp[0][1]=INT_MIN, dp[0][2]=INT_MIN;
+
+        for(int i=1; i<=n; i++)
+        {
+            int ind=i-1;
+            
+            dp[i][0]=max(dp[i-1][0], dp[i-1][(vec[ind])%3]+vec[ind]);
+    
+            dp[i][1]=max(dp[i-1][1], dp[i-1][(vec[ind]+1)%3]+vec[ind]);
+            
+            dp[i][2]=max(dp[i-1][2], dp[i-1][(vec[ind]+2)%3]+vec[ind]);
+        }
+
+        return dp[n][0];
     }
-
-	int maxSumDivThree(vector<int>& nums) {
-        int n=nums.size();
-        vector<vector<int>>dp(n, vector<int>(3, -1));
-	    return solve(0,nums,0, n, dp);
-	}
 };
