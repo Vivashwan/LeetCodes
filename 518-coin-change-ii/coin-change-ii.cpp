@@ -1,42 +1,35 @@
 class Solution {
 private:
-    int func(vector<int>&coins, int n, int amount, int ind, vector<vector<int>>&dp)
-    {
-        if(amount==0)
+    int solve(int index, int n,int amount,vector<int> &coins,vector<vector<double>> &dp){
+        for(int i=0; i<=amount; i++)
         {
-            return 1;
-        }
-
-        if(ind==n-1)
-        {
-            if(amount%coins[ind]==0)
+            if(i%coins[0]==0)
             {
-                return 1;
+                dp[0][i]=1;
             }
-            else return 0;
+            else dp[0][i]=0;
         }
-
-        if(dp[ind][amount]!=-1)
+    
+        for(int index=1; index<n; index++)
         {
-            return dp[ind][amount];
+            for(int target=0; target<=amount; target++)
+            {
+                double notPick=dp[index-1][target];
+                double pick=0;
+                if(coins[index]<=target)
+                {
+                    pick=dp[index][target-coins[index]];
+                }
+                dp[index][target]=notPick+pick;
+            }
         }
 
-        int notPick = func(coins, n, amount, ind+1, dp);
-
-        int pick = 0;
-        if (amount >= coins[ind]) 
-        {
-            pick = func(coins, n, amount - coins[ind], ind, dp);
-        }
-
-        return dp[ind][amount] = pick+notPick;
+        return dp[n-1][amount];
     }
 public:
     int change(int amount, vector<int>& coins) {
-        int n = coins.size();
-
-        vector<vector<int>>dp(n, vector<int>(amount+1, -1));
-
-        return func(coins, n, amount, 0, dp);
+        int n=coins.size();
+        vector<vector<double>>dp(n,vector<double>(amount+1,0));
+        return solve(n-1, n,amount,coins,dp);
     }
 };
