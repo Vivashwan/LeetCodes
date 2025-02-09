@@ -1,6 +1,7 @@
 class Solution {
 private:
-    int solve(int index, int n,int amount,vector<int> &coins,vector<vector<double>> &dp){
+    int solve(int n, int amount,vector<int> &coins,vector<vector<double>> &dp)
+    {
         for(int i=0; i<=amount; i++)
         {
             if(i%coins[0]==0)
@@ -30,6 +31,6 @@ public:
     int change(int amount, vector<int>& coins) {
         int n=coins.size();
         vector<vector<double>>dp(n,vector<double>(amount+1,0));
-        return solve(n-1, n,amount,coins,dp);
+        return solve(n,amount,coins,dp);
     }
 };
