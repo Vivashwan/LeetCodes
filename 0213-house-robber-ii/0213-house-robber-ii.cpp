@@ -1,26 +1,24 @@
 class Solution {
 private:
-    int robing(int index,vector<int> &nums, vector<int>&dp)
+    int robing(int n,vector<int> &nums, vector<int>&dp)
     {
-        if(index<0)
+        dp[0]=nums[0];
+
+        for(int i=1; i<n; i++)
         {
-            return 0;
+            int pick=nums[i];
+
+            if(i>1)
+            {
+                pick+=dp[i-2];
+            }
+            
+            int notPick=dp[i-1];
+
+            dp[i] = max(pick,notPick);
         }
 
-        if(index==0)
-        {
-            return nums[0];
-        }
-
-        if(dp[index]!=-1)
-        {
-            return dp[index];
-        }
-
-        int pick=nums[index]+robing(index-2,nums, dp);
-        int notPick=0+robing(index-1,nums, dp);
-
-        return dp[index] = max(pick,notPick);
+        return dp[n-1];
     }
 
 public:
@@ -32,7 +30,7 @@ public:
             return nums[0];
         }
 
-        vector<int>temp1,temp2;
+        vector<int>temp1, temp2;
 
         for(int i=0;i<n;i++)
         {
@@ -49,10 +47,10 @@ public:
 
         int n1=temp1.size(), n2=temp2.size();
 
-        vector<int>dp1(n1, -1), dp2(n2, -1);
+        vector<int>dp1(n1+1, 0), dp2(n2+1, 0);
 
-        int ans1=robing(n1-1,temp1, dp1);
-        int ans2=robing(n2-1,temp2, dp2);
+        int ans1=robing(n1, temp1, dp1);
+        int ans2=robing(n2, temp2, dp2);
 
         return max(ans1,ans2);
     }
