@@ -1,36 +1,38 @@
 class Solution {
 private:
-    int func(vector<int>&prices, int n, int ind, bool bought, int trans, vector<vector<vector<int>>>&dp)
+    int func(vector<int>&prices, int n, vector<vector<vector<int>>>&dp)
     {
-        if(ind==n || trans==0)
+        for(int ind=n-1; ind>=0; ind--)
         {
-            return 0;
+            for(int bought=0; bought<2; bought++)
+            {
+                for(int trans=1; trans<3; trans++)
+                {
+                    int profit;
+
+                    if(bought==false)
+                    {
+                        profit = max(dp[ind+1][0][trans], dp[ind+1][1][trans]-prices[ind]);
+                    }
+                    else
+                    {
+                        profit = max(dp[ind+1][1][trans], prices[ind]+dp[ind+1][0][trans-1]);
+                    }
+
+                    dp[ind][bought][trans] = profit;
+                }
+            }
         }
 
-        if(dp[ind][bought][trans]!=-1)
-        {
-            return dp[ind][bought][trans];
-        }
+        return dp[0][0][2];
 
-        int profit;
-
-        if(bought==false)
-        {
-            profit = max(func(prices, n, ind+1, false, trans, dp), func(prices, n, ind+1, true, trans, dp)-prices[ind]);
-        }
-        else
-        {
-            profit = max(func(prices, n, ind+1, true, trans, dp), prices[ind]+func(prices, n, ind+1, false, trans-1, dp));
-        }
-
-        return dp[ind][bought][trans] = profit;
     }
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
 
-        vector<vector<vector<int>>>dp(n+1, vector<vector<int>>(2, vector<int>(2+1, -1)));
+        vector<vector<vector<int>>>dp(n+1, vector<vector<int>>(2, vector<int>(2+1, 0)));
 
-        return func(prices, n, 0, false, 2, dp);
+        return func(prices, n, dp);
     }
 };
