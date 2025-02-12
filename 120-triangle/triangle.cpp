@@ -1,27 +1,30 @@
 class Solution {
 private:
-    int greedy(vector<vector<int>>& triangle, int n, int row, int col, vector<vector<int>>&dp) {
-        if(row==n-1) 
+    int greedy(vector<vector<int>>& triangle, int n, vector<vector<int>>&dp) 
+    {
+        for(int j=0; j<n; j++)
         {
-            return triangle[row][col];
+            dp[n-1][j] = triangle[n-1][j];
         }
 
-        if(dp[row][col]!=-1)
+        for(int row=n-1; row>=0; row--)
         {
-            return dp[row][col];
+            for(int col=0; col<=row; col++)
+            {
+                int leftSum=dp[row+1][col], rightSum=dp[row+1][col+1];
+                
+                dp[row][col] = triangle[row][col]+min(leftSum, rightSum);
+            }
         }
-        
-        int leftSum=greedy(triangle, n, row+1, col, dp), 
-        rightSum=greedy(triangle, n, row+1, col+1, dp);
-        
-        return dp[row][col] = triangle[row][col]+min(leftSum, rightSum);
+
+        return dp[0][0];
     }
 
 public:
     int minimumTotal(vector<vector<int>>& triangle) {
         int n = triangle.size();
-        vector<vector<int>>dp(n, vector<int>(n, -1));
+        vector<vector<int>>dp(n+1, vector<int>(n+1, 0));
 
-        return greedy(triangle, n, 0, 0, dp);
+        return greedy(triangle, n, dp);
     }
 };
