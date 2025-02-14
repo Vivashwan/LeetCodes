@@ -1,39 +1,41 @@
 class Solution {
 private:
-    int func(vector<int>&piles, int n, int ind, int M, int alice, vector<vector<vector<int>>>&dp)
+    int func(vector<int>&piles, int n, vector<vector<vector<int>>>&dp)
     {
-        if(ind>=n)
+        for(int ind=n-1; ind>=0; ind--)
         {
-            return 0;
-        }
-
-        if(dp[ind][M][alice]!=-1)
-        {
-            return dp[ind][M][alice];
-        }
-
-        int res=(alice==1)?INT_MIN:INT_MAX;
-
-        int stones=0;
-
-        for(int X=1; X<=min(2*M, n-ind); X++)
-        {
-            stones+=piles[ind+(X-1)];
-
-            if(alice==1)
+            for(int M=1; M<=n; M++)
             {
-                res=max(res, stones+func(piles, n, ind+X, max(M,X), 0, dp));
+                for(int alice=0; alice<=1; alice++)
+                {
+                    int res=(alice==1) ? INT_MIN:INT_MAX;
+
+                    int stones=0;
+
+                    for(int X=1; X<=min(2*M, n-ind); X++)
+                    {
+                        stones+=piles[ind+(X-1)];
+
+                        if(alice==1)
+                        {
+                            res=max(res, stones+dp[ind+X][max(M,X)][0]);
+                        }
+                        else res=min(res, dp[ind+X][max(M,X)][1]);
+                    }
+
+                    dp[ind][M][alice] = res;
+
+                }
             }
-            else res=min(res, func(piles, n, ind+X, max(M,X), 1, dp));
         }
 
-        return dp[ind][M][alice] = res;
+        return dp[0][1][1];
     }
 public:
     int stoneGameII(vector<int>& piles) {
         int n=piles.size();
 
-        vector<vector<vector<int>>>dp(n+1, vector<vector<int>>(201, vector<int>(2, -1)));
-        return func(piles, n, 0, 1, 1, dp);
+        vector<vector<vector<int>>>dp(n+1, vector<vector<int>>(201, vector<int>(2, 0)));
+        return func(piles, n, dp);
     }
 };
