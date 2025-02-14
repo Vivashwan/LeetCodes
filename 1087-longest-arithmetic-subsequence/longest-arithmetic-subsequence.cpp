@@ -1,19 +1,42 @@
 class Solution {
+private:
+    int func(vector<int>&nums, int n, int ind, int diff, vector<vector<int>>&dp)
+    {
+        if(ind>=n)
+        {
+            return 0;
+        }
+
+        if(dp[ind][500+diff]!=-1)
+        {
+            return dp[ind][500+diff];
+        }
+
+        int res=0;
+
+        for(int i=ind+1; i<n; i++)
+        {
+            if(nums[i]-nums[ind]==diff)
+            {
+                res=max(res, 1+func(nums, n, i, diff, dp));
+            }
+        }
+
+        return dp[ind][500+diff] = res;
+    }
 public:
     int longestArithSeqLength(vector<int>& nums) {
-        int n=nums.size(), res=1;
+        int n=nums.size();
 
-        vector<vector<int>>dp(n+1, vector<int>(1001, 1));
+        int res=0;
 
-        for(int i=0; i<n; i++)
+        vector<vector<int>>dp(n+1, vector<int>(1001, -1));
+
+        for(int i=0; i<n-1; i++)
         {
-            for(int j=0; j<i; j++)
+            for(int j=i+1; j<n; j++)
             {
-                int diff=nums[i]-nums[j];
-
-                dp[i][diff+500]=max(dp[i][diff+500], 1+dp[j][diff+500]);
-
-                res=max(res, dp[i][diff+500]);
+                res=max(res, 2+func(nums, n, j, nums[j]-nums[i], dp));
             }
         }
 
