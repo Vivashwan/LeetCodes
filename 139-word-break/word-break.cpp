@@ -1,48 +1,42 @@
 class Solution {
 private:
-    int t[301];
-    bool solve(string s, int index, int n, unordered_set<string>&st)
+    bool func(string s, int n, int ind, unordered_set<string>&mp, vector<int>&dp)
     {
-        if(index==n)
+        if(ind==n)
         {
             return true;
         }
 
-        if(st.find(s.substr(index, n-index))!=st.end())
+        if(dp[ind]!=-1)
+        {
+            return dp[ind];
+        }
+
+        if(mp.find(s.substr(ind, n-ind))!=mp.end())
         {
             return true;
         }
 
-        if(t[index]!=-1)
+        for(int len=1; len<=n; len++)
         {
-            return t[index];
-        }
+            string temp=s.substr(ind, len);
 
-        for(int len = 1; len<=n; len++)
-        {
-            string temp = s.substr(index, len);
-
-            if(st.find(temp)!=st.end() and solve(s, index+len, n, st))
+            if(mp.find(temp)!=mp.end() && func(s, n, ind+len, mp, dp))
             {
                 return true;
             }
         }
 
-        return t[index] = false;
+        return dp[ind] = false;
     }
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
         int n = s.length();
 
-        unordered_set<string>st;
+        unordered_set<string>mp(wordDict.begin(), wordDict.end());
 
-        memset(t, -1, sizeof(t));
+        vector<int>dp(301, -1);
 
-        for(string word: wordDict)
-        {
-            st.insert(word);
-        }
-
-        return solve(s, 0, n, st);
+        return func(s, n, 0, mp, dp);
     }
 };
