@@ -18,13 +18,13 @@ public:
             dp[index] = max(dp[index], maxLen); 
         }
 
-        int result=0;
+        int res=0;
 
         for(int len: dp) 
         {
-            result += len;
+            res+=len;
         }
 
-        return result;
+        return res;
     }
 };
