@@ -2,56 +2,40 @@ class Solution {
 private:
     int func(string& s1, string& s2, int n, int m, int ind1, int ind2, vector<vector<int>>&dp)
     {
-        if(ind1>=n || ind2>=m)
+        for(int i=1; i<=n; i++) 
         {
-            if(ind1==n and ind2==m)
-            {
-                return 0;
-            }
-            else if(ind1>=n)
-            {
-                int sum=0;
-
-                for(int i=ind2; i<m; i++)
-                {    
-                    sum+=int(s2[i]);
-                }
-
-                return sum;
-            }
-            else
-            {
-                int sum=0;
-
-                for(int i=ind1; i<n; i++)
-                {    
-                    sum+=int(s1[i]);
-                }
-
-                return sum;
-            }
+            dp[i][0]=dp[i-1][0]+int(s1[i-1]);
         }
 
-        if(dp[ind1][ind2]!=-1)
+        for(int j=1; j<=m; j++) 
         {
-            return dp[ind1][ind2];
+            dp[0][j]=dp[0][j-1]+int(s2[j-1]);
         }
 
         int res=0;
 
-        if(s1[ind1]==s2[ind2])
+        for(int ind1=1; ind1<=n; ind1++)
         {
-            res=func(s1, s2, n, m, ind1+1, ind2+1, dp);
-        }
-        else res=min(int(s1[ind1])+func(s1, s2, n, m, ind1+1, ind2, dp), int(s2[ind2])+func(s1, s2, n, m, ind1, ind2+1, dp));
+            for(int ind2=1; ind2<=m; ind2++)
+            {
+                if(s1[ind1-1]==s2[ind2-1])
+                {
+                    res=dp[ind1-1][ind2-1];
+                }
+                else res=min(int(s1[ind1-1])+dp[ind1-1][ind2], int(s2[ind2-1])+dp[ind1][ind2-1]);
 
-        return dp[ind1][ind2] = res;
+                dp[ind1][ind2] = res;
+            }
+        }
+
+        return dp[n][m];
     }
+
 public:
     int minimumDeleteSum(string s1, string s2) {
         int n=s1.length(), m=s2.length();
 
-        vector<vector<int>>dp(n+1, vector<int>(m+1, -1));
+        vector<vector<int>>dp(n+1, vector<int>(m+1, 0));
 
         return func(s1, s2, n, m, 0, 0, dp);
     }
