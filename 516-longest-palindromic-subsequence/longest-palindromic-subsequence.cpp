@@ -1,33 +1,35 @@
 class Solution {
 private:
-    int func(string &s, int l, int r, vector<vector<int>>&dp) 
+    int func(string &s, int n, vector<vector<int>>&dp) 
     {
-        if(l>r)
-        { 
-            return 0; 
-        }
-
-        if(l==r)
-        { 
-            return 1;
-        }
-
-        if(dp[l][r]!=-1)
-        { 
-            return dp[l][r]; 
-        }
-
-        if(s[l]==s[r]) 
+        for(int l=0; l<n; l++)
         {
-            return dp[l][r] = 2+func(s, l+1, r-1, dp);
-        } 
-        else return dp[l][r] = max(func(s, l+1, r, dp), func(s, l, r-1, dp));
+            dp[l][l]=1;
+        }
+
+        for(int len=2; len<=n; len++) 
+        { 
+            for(int i=0; i<=n-len; i++) 
+            { 
+                int j=i+len-1; 
+
+                if(s[i]==s[j])
+                {
+                    dp[i][j] = 2+dp[i+1][j-1];  
+                } 
+                else dp[i][j] = max(dp[i+1][j], dp[i][j-1]);
+            }
+        }
+
+        return dp[0][n-1];
     }
 
 public:
     int longestPalindromeSubseq(string s) {
         int n=s.length();
-        vector<vector<int>>dp(n, vector<int>(n, -1));
-        return func(s, 0, n-1, dp);
+
+        vector<vector<int>>dp(n+1, vector<int>(n+1, 0));
+
+        return func(s, n, dp);
     }
 };
