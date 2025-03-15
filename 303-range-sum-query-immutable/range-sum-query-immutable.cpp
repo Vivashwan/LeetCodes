@@ -1,17 +1,27 @@
 class NumArray {
-public:
+private:
     vector<int>temp;
+public:
     NumArray(vector<int>& nums) {
-        temp.push_back(0);
+        int sum=0;
 
         for(auto it: nums)
         {
-            temp.push_back(temp.back()+it);
+            sum+=it;
+            temp.push_back(sum);
         }
     }
     
     int sumRange(int left, int right) {
-        return temp[right+1]-temp[left];
+        int r=temp[right];
+        int l=0;
+
+        if(left!=0)
+        {
+            l=temp[left-1];
+        }   
+
+        return r-l;
     }
 };
 
