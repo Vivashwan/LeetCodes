@@ -1,39 +1,36 @@
 class Solution {
-private:
-    int func(vector<int>&temp)
-    {
-        int res=0, len=0;
-
-        for(auto it: temp)
-        {
-            len=it==0?0:len+1;
-            res+=len;
-        }
-
-        return res;
-    }
 public:
     int numSubmat(vector<vector<int>>& mat) {
-        int n = mat.size(), m = mat[0].size();
-
-        int ans=0;
-
-        for(int i=0; i<n; i++)
+        int m = mat.size(), n = mat[0].size();
+        vector<vector<int>>prefix(m, vector<int>(n, 0));
+        
+        for(int i=0; i<m; i++) 
         {
-            vector<int>temp(m, 1);
-
-            for(int j=i; j<n; j++)
+            for(int j=0; j<n; j++) 
             {
-                for(int k=0; k<m; k++)
+                if(mat[i][j]==1) 
                 {
-                    temp[k]&=mat[j][k];
+                    prefix[i][j] = (j==0) ? 1 : prefix[i][j-1] + 1;
                 }
-                
-                ans+=func(temp);
             }
-
         }
+        
+        int count=0;
+        
+        for (int j=0; j<n; j++) 
+        {
+            for(int i=0; i<m; i++) 
+            {
+                int minWidth=prefix[i][j];
 
-        return ans;
+                for(int k=i; k>=0 && minWidth>0; k--) 
+                {
+                    minWidth = min(minWidth, prefix[k][j]);
+                    count += minWidth;
+                }
+            }
+        }
+        
+        return count;
     }
 };
