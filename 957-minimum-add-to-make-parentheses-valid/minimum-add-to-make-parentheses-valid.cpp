@@ -1,19 +1,22 @@
 class Solution {
 public:
     int minAddToMakeValid(string s) {
-        int n = s.length();
+        int open = 0;        // count of unmatched '('
+        int insertions = 0;  // count of unmatched ')'
 
-        stack<char>st;
-
-        for(auto it: s)
-        {
-            if(!st.empty() && (st.top()=='(' && it==')'))
-            {
-                st.pop();
+        for (char ch : s) {
+            if (ch == '(') {
+                open++;
+            } else { // ch == ')'
+                if (open > 0) {
+                    open--; // match it with an open '('
+                } else {
+                    insertions++; // no '(' to match, need to insert one
+                }
             }
-            else st.push(it);
         }
 
-        return st.size();
+        // Total insertions needed = unmatched '(' + unmatched ')'
+        return open + insertions;
     }
 };
