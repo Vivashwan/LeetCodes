@@ -1,24 +1,17 @@
 class Solution {
 public:
     bool carPooling(vector<vector<int>>& trips, int capacity) {
-        int n = trips.size();
-
-        map<int, int>mp;
+        vector<int>siml(1001, capacity);
 
         for(auto it: trips)
         {
-            mp[it[1]]+=it[0], mp[it[2]]-=it[0];
-        }
-
-        int curr=0;
-
-        for(auto it: mp)
-        {
-            curr+=it.second;
-
-            if(curr>capacity)
+            for(int i=it[1]; i<it[2]; i++)
             {
-                return false;
+                if(siml[i]-it[0]<0)
+                {
+                    return false;
+                }
+                else siml[i]-=it[0];
             }
         }
 
