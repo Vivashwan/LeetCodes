@@ -1,33 +1,48 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 private:
-    TreeNode* parent = nullptr;
-    TreeNode* firstMisplaced = nullptr;
-    TreeNode* secondMisplaced = nullptr;
-    
-    void findMisplaced(TreeNode* child) {
-        if (child == nullptr) {
+    TreeNode* first = nullptr, *second = nullptr, *prev = nullptr;
+
+    void inorder(TreeNode* root) 
+    {
+        if(!root)
+        { 
             return;
         }
-        
-        findMisplaced(child->left);
-        
-        if (parent != nullptr && child->val < parent->val) {
-            if (firstMisplaced == nullptr) {
-                firstMisplaced = parent;
+
+        inorder(root->left);
+
+        if(prev && root->val<prev->val) 
+        {
+            if(!first) 
+            {
+                first=prev;
             }
-            secondMisplaced = child;
+            second=root;
         }
-        parent = child;
-        
-        findMisplaced(child->right);
+
+        prev=root;
+
+        inorder(root->right);
     }
-    
+
 public:
     void recoverTree(TreeNode* root) {
-        findMisplaced(root);
-        
-        if (firstMisplaced != nullptr && secondMisplaced != nullptr) {
-            swap(firstMisplaced->val, secondMisplaced->val);
+        inorder(root);
+
+        if(first && second) 
+        {
+            swap(first->val, second->val);
         }
     }
 };
