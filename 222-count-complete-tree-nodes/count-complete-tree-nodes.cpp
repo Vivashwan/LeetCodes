@@ -11,13 +11,13 @@
  */
 class Solution {
 private:
-    vector<TreeNode*>res;
+    int count=0;
     void func(TreeNode* root)
     {
         if(root)
         {
             func(root->left);
-            res.push_back(root);
+            count++;
             func(root->right);
         }
     }
@@ -25,6 +25,6 @@ public:
     int countNodes(TreeNode* root) {
         func(root);
 
-        return res.size();
+        return count;
     }
 };
