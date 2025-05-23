@@ -11,18 +11,16 @@
  */
 class Solution {
 private:
-    void func(TreeNode* root, int &count, int maxi)
+    void func(TreeNode* root, int& count, int maxi)
     {
-        if(root==nullptr)
+        if(!root)
         {
             return;
         }
 
         if(root->val>=maxi)
         {
-            count++;
-
-            maxi = max(maxi, root->val);
+            count++, maxi=root->val;
         }
 
         func(root->left, count, maxi);
@@ -30,16 +28,15 @@ private:
     }
 public:
     int goodNodes(TreeNode* root) {
-        if(root)
+        if(!root)
         {
-            int count=1;
-
-            func(root->left, count, root->val);
-            func(root->right, count, root->val);
-
-            return count;
+            return 0;
         }
 
-        return 0;
+        int count=0, maxi=root->val;
+
+        func(root, count, maxi);
+
+        return count;
     }
 };
