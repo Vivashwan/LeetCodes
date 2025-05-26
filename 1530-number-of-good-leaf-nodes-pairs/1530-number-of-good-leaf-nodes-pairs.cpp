@@ -11,22 +11,22 @@
  */
 class Solution {
 private:
-    int count = 0;
+    int count=0;
 
-    vector<int>func(TreeNode* root, int dist)
+    vector<int>func(TreeNode* root, int distance)
     {
-        if(root==nullptr)
+        if(!root)
         {
             return {0};
         }
 
-        if(root->left==nullptr && root->right == nullptr)
+        if(!root->left && !root->right)
         {
             return {1};
         }
 
-        vector<int>left = func(root->left, dist);
-        vector<int>right = func(root->right, dist);
+        vector<int>left=func(root->left, distance);
+        vector<int>right=func(root->right, distance);
 
         for(auto u: left)
         {
@@ -34,37 +34,37 @@ private:
             {
                 if(u>0 && v>0)
                 {
-                    if(u+v <=dist)
+                    if(u+v<=distance)
                     {
                         count++;
-                    }
+                    }  
                 }
             }
-        }
+        } 
 
-        vector<int>res;
+        vector<int>res;  
 
         for(auto it: left)
         {
-            if(it>0 && it<dist)
+            if(it>0 && it<distance)
             {
                 res.push_back(it+1);
-            }
+            } 
         }
 
         for(auto it: right)
         {
-            if(it>0 && it<dist)
+            if(it>0 && it<distance)
             {
                 res.push_back(it+1);
             }
-        }
+        }  
 
-        return res;
+        return res;   
     }
+
 public:
     int countPairs(TreeNode* root, int distance) {
-        
         func(root, distance);
 
         return count;
