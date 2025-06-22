@@ -2,19 +2,18 @@ class Solution {
 public:
     vector<int> partitionLabels(string s) {
         int n = s.length();
-
-        vector<int>endPos(26, 0), res;
+        vector<int>lastOcc(26, 0), res;
 
         for(int i=0; i<n; i++)
         {
-            endPos[s[i]-'a']=i;
+            lastOcc[s[i]-'a']=i;
         }
 
         int start=0, end=0;
 
         for(int i=0; i<n; i++)
         {
-            end=max(end, endPos[s[i]-'a']);
+            end=max(end, lastOcc[s[i]-'a']);
 
             if(i==end)
             {
