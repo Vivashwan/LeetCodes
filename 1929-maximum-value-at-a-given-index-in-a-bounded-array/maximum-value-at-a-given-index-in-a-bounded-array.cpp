@@ -4,8 +4,8 @@ private:
     {
         if(mid>=length)
         {
-            long long small=mid-length+1;
-            return (long long)(mid+small)*length/2;
+            long long last=mid-length+1;
+            return (long long)(mid+last)*length/2;
         } 
         else
         {
