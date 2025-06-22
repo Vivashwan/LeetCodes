@@ -1,41 +1,42 @@
 class Solution {
 private:
-    long long formula(long long count, long long x)
-    {   
-        return count*x - (count*(count+1))/2;
+    long long calcSum(int mid, int length)
+    {
+        if(mid>=length)
+        {
+            long long small=mid-length+1;
+            return (long long)(mid+small)*length/2;
+        } 
+        else
+        {
+            long long full=(long long)(mid+1)*mid/2;
+            return full+(length-mid); 
+        }
+    }
+
+    bool func(int mid, int n, int index, int maxSum)
+    {
+        long long left=calcSum(mid-1, index);
+        long long right=calcSum(mid-1, n-index-1);
+
+        return mid+left+right<=maxSum;
     }
 public:
     int maxValue(int n, int index, int maxSum) {
-        long long left = 1, right = maxSum;
+        int low=1, high=maxSum;
 
-        int res = 0;
+        int res=INT_MIN;
 
-        while(left<=right)
+        while(low<=high)
         {
-            long long mid = left+(right-left)/2;
+            int mid=low+(high-low)/2;
 
-            long long leftCount = min((long long)index, mid-1);
-
-            long long leftSum = formula(leftCount, mid);
-
-            leftSum+=max((long long)0, index-(mid-1));
-
-
-            long long rightCount = min((long long)n-index-1, mid-1);
-
-            long long rightSum = formula(rightCount, mid);
-
-            rightSum+=max((long long)0, n-index-1-(mid-1));
-
-            long long totalSum = leftSum+mid+rightSum;
-
-            if(totalSum<=maxSum)
+            if(func(mid, n, index, maxSum))
             {
-                res = max((long long)res, mid);
-
-                left = mid+1;
+                res=mid;
+                low=mid+1;
             }
-            else right = mid-1;
+            else high=mid-1;
         }
 
         return res;
