@@ -1,37 +1,19 @@
 class Solution {
 public:
     vector<int> findClosestElements(vector<int>& arr, int k, int x) {
-        vector<int>res;
+        int left=0, right=arr.size()-k;
 
-        map<int, vector<int>>mp;
-
-        for(auto it: arr)
+        while(left<right)
         {
-            mp[abs(it-x)].push_back(it);
+            int mid=(left+right)/2;
+
+            if(x-arr[mid]>arr[mid+k]-x)
+            {
+                left=mid+1;
+            }
+            else right=mid;
         }
 
-        for(auto u: mp)
-        {
-            auto v=u.second;
-
-            for(auto it: v)
-            {
-                if(k!=0)
-                {
-                    res.push_back(it);
-                    k--;
-                }
-                else break;
-            }
-
-            if(k==0)
-            {
-                break;
-            }
-        }
-
-        sort(res.begin(), res.end());
-
-        return res;
+        return vector<int>(arr.begin()+left, arr.begin()+left+k);
     }
 };
