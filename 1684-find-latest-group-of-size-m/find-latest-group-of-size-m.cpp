@@ -1,35 +1,46 @@
 class Solution {
 public:
     int findLatestStep(vector<int>& arr, int m) {
-        int n = arr.size();
+        int n=arr.size();
 
-        if(n==m)
+        if(m==n)
         {
             return n;
-        }   
+        }
 
-        vector<int>length(n+2, 0), count(n+1, 0);
+        vector<int>length(n+2, 0);
+        vector<int>count(n+1, 0);
 
-        int ans=-1;
+        int res=-1;
 
-        for(int i=0; i<n; i++)
+        for(int step=0; step<n; step++)
         {
-            int a = arr[i], low = length[a-1], high = length[a+1];
+            int pos=arr[step];
 
-            int sum = low+high+1;
+            int left=length[pos-1], right=length[pos+1];
 
-            length[a-low] = length[a+high] = sum;
+            int total=left+right+1;
 
-            count[low]--, count[high]--;
+            if(left>0)
+            {
+                count[left]--;
+            }
 
-            count[sum]++;
+            if(right>0)
+            {
+                count[right]--;
+            }
+
+            length[pos-left]=length[pos+right]=total;
+
+            count[total]++;
 
             if(count[m]>0)
             {
-                ans=i+1;
+                res=step+1;
             }
-        }
+        }       
 
-        return ans;
+        return res;
     }
 };
