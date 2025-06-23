@@ -8,8 +8,7 @@ public:
             return n;
         }
 
-        vector<int>length(n+2, 0);
-        vector<int>count(n+1, 0);
+        vector<int>length(n+2, 0), count(n+1, 0);
 
         int res=-1;
 
@@ -31,7 +30,7 @@ public:
                 count[right]--;
             }
 
-            length[pos-left]=length[pos+right]=total;
+            length[pos-left]=length[pos]=length[pos+right]=total;
 
             count[total]++;
 
