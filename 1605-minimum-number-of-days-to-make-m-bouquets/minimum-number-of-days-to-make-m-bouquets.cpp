@@ -1,52 +1,55 @@
 class Solution {
 private:
-    int func(int mid, vector<int>&bloomDay, int k, int n)
+    bool canMakeBouquets(int day, vector<int>&bloomDay, int m, int k)
     {
-        int bouquet=0, bloomedFlowers=0;
+        int bouquets=0, flowers=0;
 
-        for(int i=0; i<n; i++)
+        for(int bloom: bloomDay)
         {
-            if(bloomDay[i]<=mid)
+            if(bloom<=day)
             {
-                bloomedFlowers++;
-
-                if(bloomedFlowers==k)
+                flowers++;
+                if(flowers==k) 
                 {
-                    bouquet++, bloomedFlowers=0;
+                    bouquets++;
+                    flowers=0;
                 }
             }
-            else bloomedFlowers=0;
-        } 
+            else flowers=0;
+        }
 
-        return bouquet;
+        return bouquets>=m;
     }
+
 public:
     int minDays(vector<int>& bloomDay, int m, int k) {
-        int n = bloomDay.size();
+        long long totalFlowers=(long long)m*k;
 
-        if(m>n/k)
-        {
+        if(bloomDay.size()<totalFlowers)
+        { 
             return -1;
         }
 
-        int low = 1, high = INT_MIN;
+        int low=*min_element(bloomDay.begin(), bloomDay.end());
+        int high=*max_element(bloomDay.begin(), bloomDay.end());
 
-        for(int i=0; i<n; i++)
-        {
-            high = max(high, bloomDay[i]);
-        }
+        int res=-1;
 
         while(low<=high)
         {
-            int mid = low+(high-low)/2;
+            int mid=low+(high-low)/2;
 
-            if(func(mid, bloomDay, k, n)>=m)
+            if(canMakeBouquets(mid, bloomDay, m, k))
             {
-                high = mid-1;
+                res=mid;
+                high=mid-1;
+            } 
+            else
+            {
+                low=mid+1;
             }
-            else low = mid+1;
         }
 
-        return low;
+        return res;
     }
 };
