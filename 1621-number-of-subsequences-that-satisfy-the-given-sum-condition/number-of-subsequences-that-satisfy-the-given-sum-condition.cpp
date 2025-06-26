@@ -1,37 +1,33 @@
 class Solution {
 private:
-    int MOD = 1e9+7;
+    int MOD=1e9+7;
 public:
     int numSubseq(vector<int>& nums, int target) {
-        int n = nums.size();
+        int n=nums.size();
 
         sort(nums.begin(), nums.end());
 
-        vector<int>power(n, 0);
+        vector<int>power(n, 1);
 
-        power[0] = 1;
+        int count=0;
 
         for(int i=1; i<n; i++)
         {
-            power[i] = (power[i-1]*2)%MOD;
+            power[i]=(2*power[i-1])%MOD;
         }
 
-        int low = 0, high = n-1;
-
-        int res=0;
+        int low=0, high=n-1;
 
         while(low<=high)
         {
             if(nums[low]+nums[high]<=target)
             {
-                int diff = high-low;
-                res=(res%MOD+power[diff])%MOD;
-
+                count=(count+power[high-low])%MOD;
                 low++;
             }
             else high--;
         }
 
-        return res;
+        return count;
     }
 };
