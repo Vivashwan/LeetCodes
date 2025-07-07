@@ -12,9 +12,9 @@ public:
             }
 
             st.push(it);
-        }
+        }   
 
-        while(k>0 && !st.empty())
+        while(k!=0 && !st.empty())
         {
             st.pop();
             k--;
@@ -30,7 +30,7 @@ public:
 
         reverse(res.begin(), res.end());
 
-        int i=0; 
+        int i=0;
 
         while(i<res.length() && res[i]=='0')
         {
