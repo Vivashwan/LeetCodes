@@ -4,14 +4,14 @@ private:
     {
         if(a[0]==b[0])
         {
-            return a[1] < b[1];
+            return a[1]<b[1];
         }
 
-        return a[0] < b[0];
+        return a[0]<b[0];
     }
 public:
     vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
-        int n = people.size();
+        int n=people.size();
 
         sort(people.begin(), people.end(), myCmp);
 
