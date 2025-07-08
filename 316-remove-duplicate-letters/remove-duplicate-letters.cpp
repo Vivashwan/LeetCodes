@@ -1,17 +1,11 @@
 class Solution {
 public:
     string removeDuplicateLetters(string s) {
-        int n = s.length();
+        int n=s.length();
 
-        if(n==1)
-        {
-            return s;
-        }
-
-        vector<bool>visited(26, false);
+        string str;
         vector<int>lastOcc(26, -1);
-
-        string str="";
+        vector<bool>visited(26, false);
 
         for(int i=0; i<n; i++)
         {
