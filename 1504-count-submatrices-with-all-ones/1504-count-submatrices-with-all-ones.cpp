@@ -1,36 +1,60 @@
 class Solution {
+private:
+    int countHistograms(vector<int>&nums, int n)
+    {
+        stack<int>st;
+
+        vector<int>count(n, 0);
+
+        int res=0;
+
+        for(int i=0; i<n; i++)
+        {
+            while(!st.empty() && nums[st.top()]>=nums[i])
+            {
+                st.pop();
+            }
+
+            if(st.empty())
+            {
+                count[i]=nums[i]*(i+1);
+            }
+            else
+            {
+                int prev=st.top();
+                count[i]=count[prev]+nums[i]*(i-prev);
+            }
+
+            st.push(i);
+            res+=count[i];
+        }
+
+        return res;
+    }
 public:
     int numSubmat(vector<vector<int>>& mat) {
-        int m = mat.size(), n = mat[0].size();
-        vector<vector<int>>prefix(m, vector<int>(n, 0));
-        
-        for(int i=0; i<m; i++) 
-        {
-            for(int j=0; j<n; j++) 
-            {
-                if(mat[i][j]==1) 
-                {
-                    prefix[i][j] = (j==0) ? 1 : prefix[i][j-1] + 1;
-                }
-            }
-        }
-        
-        int count=0;
-        
-        for (int j=0; j<n; j++) 
-        {
-            for(int i=0; i<m; i++) 
-            {
-                int minWidth=prefix[i][j];
+        int n=mat.size(), m=mat[0].size();
 
-                for(int k=i; k>=0 && minWidth>0; k--) 
+        vector<vector<int>>temp=mat;
+
+        for(int i=1; i<n; i++)
+        {
+            for(int j=0; j<m; j++)
+            {
+                if(temp[i][j]==1)
                 {
-                    minWidth = min(minWidth, prefix[k][j]);
-                    count += minWidth;
+                    temp[i][j]=temp[i][j]+temp[i-1][j];
                 }
             }
         }
-        
-        return count;
+
+        int total=0;
+
+        for(int i=0; i<n; i++)
+        {
+            total+=countHistograms(temp[i], m);
+        }
+
+        return total;
     }
 };
