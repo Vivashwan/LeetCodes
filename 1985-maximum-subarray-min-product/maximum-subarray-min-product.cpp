@@ -1,54 +1,54 @@
 class Solution {
 private:
-    int MOD = 1e9+7;
+    int MOD=1e9+7;
 public:
     int maxSumMinProduct(vector<int>& nums) {
-        int n = nums.size();
+        int n=nums.size();
 
-        long long res = 0;
+        vector<long long>prefixSum(n+1, 0);
 
-        vector<long long>prefix(n+1, 0);
-
-        for(int i=1; i<n+1; i++)
+        for(int i=0; i<n; i++)
         {
-            prefix[i] = prefix[i-1]+(long long)nums[i-1];
+            prefixSum[i+1]=prefixSum[i]+nums[i];
         }
 
-        vector<int>left(n, 0), right(n, n);
+        vector<int>left(n, 0), right(n, 0);
 
         stack<int>st;
 
         for(int i=0; i<n; i++)
         {
-            while(!st.empty() && nums[st.top()]>nums[i])
+            while(!st.empty() && nums[st.top()]>=nums[i])
             {
-                right[st.top()] = i;
                 st.pop();
             }
+
+            left[i]=st.empty() ? 0:st.top()+1;
             st.push(i);
         }
 
-        while (!st.empty())
+        while(!st.empty())
         {
             st.pop();
         }
 
         for(int i=n-1; i>=0; i--)
         {
-            while(!st.empty() && nums[st.top()]>nums[i])
+            while(!st.empty() && nums[st.top()]>=nums[i])
             {
-                left[st.top()] = i+1;
                 st.pop();
             }
-            st.push(i);   
+
+            right[i]=st.empty() ? n-1:st.top()-1;
+            st.push(i);
         }
+
+        long long res=0;
 
         for(int i=0; i<n; i++)
         {
-            long long rangeSum = prefix[right[i]]-prefix[left[i]];
-            long long currProduct = rangeSum*nums[i];
-
-            res = max(res, currProduct);
+            long long sum=prefixSum[right[i]+1]-prefixSum[left[i]];
+            res=max(res, nums[i]*sum);
         }
 
         return res%MOD;
