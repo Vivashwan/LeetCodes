@@ -3,37 +3,34 @@ public:
     bool checkValidString(string s) {
         stack<int>leftParen, stars;
 
-        for(int i=0; i<s.size(); i++) 
+        for(int i=0; i<s.length(); i++)
         {
-            if(s[i] == '(') 
+            if(s[i]=='(')
             {
                 leftParen.push(i);
-            } 
-            else if(s[i] == '*') 
+            }
+            else if(s[i]=='*')
             {
                 stars.push(i);
-            } 
-            else 
+            }
+            else
             {
-                if(!leftParen.empty()) 
+                if(!leftParen.empty())
                 {
                     leftParen.pop();
-                } 
-                else if(!stars.empty()) 
+                }
+                else if(!stars.empty())
                 {
                     stars.pop();
-                } 
-                else 
-                {
-                    return false;
                 }
+                else return false;
             }
         }
 
-        while(!leftParen.empty() && !stars.empty()) 
+        while(!leftParen.empty() && !stars.empty())
         {
-            if(leftParen.top() > stars.top())
-            { 
+            if(leftParen.top()>stars.top())
+            {
                 return false;
             }
 
