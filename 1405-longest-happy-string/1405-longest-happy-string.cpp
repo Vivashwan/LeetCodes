@@ -3,78 +3,62 @@ public:
     string longestDiverseString(int a, int b, int c) {
         priority_queue<pair<int, char>>pq;
 
-        if(a)
+        if(a>0)
         {
             pq.push({a, 'a'});
         }
 
-        if(b)
+        if(b>0)
         {
             pq.push({b, 'b'});
         }
 
-        if(c)
+        if(c>0)
         {
             pq.push({c, 'c'});
         }
 
-        string str="";
+        string res;
 
-        while(pq.size()>1)
+        while(!pq.empty())
         {
-            pair<int, char>p1 = pq.top();
+            auto [occ1, ch1]=pq.top();
             pq.pop();
 
-            pair<int, char>p2 = pq.top();
-            pq.pop();
+            int len=res.length();
 
-            if(p1.first>=2)
+            if(len>=2 && res[len-1]==ch1 && res[len-2]==ch1)
             {
-                str+=p1.second;
-                str+=p1.second;
-                p1.first-=2;
-            }
-            else
-            {
-                str+=p1.second;
-                p1.first-=1;
-            }
+                if(pq.empty())
+                {
+                    break;
+                }
 
-            if(p2.first>=2 && p2.first>=p1.first)
-            {
-                str+=p2.second;
-                str+=p2.second;
-                p2.first-=2;
-            }
-            else
-            {
-                str+=p2.second;
-                p2.first-=1;
-            }
+                auto [occ2, ch2]=pq.top();
+                pq.pop();
 
-            if(p1.first>0)
-            {
-                pq.push(p1);
-            }
+                res+=ch2;
+                occ2--;
 
-            if(p2.first>0)
+                if(occ2>0)
+                {
+                    pq.push({occ2, ch2});
+                }
+
+                pq.push({occ1, ch1});
+            }
+            else 
             {
-                pq.push(p2);
+                res+=ch1;
+                occ1--;
+
+                if(occ1>0)
+                { 
+                    pq.push({occ1, ch1});
+                }
             }
         }
 
-        if(pq.empty())
-        {
-            return str;
-        }
-
-        if(pq.top().first>=2)
-        {
-            str+=pq.top().second;
-            str+=pq.top().second;
-        }
-        else str+=pq.top().second;
-
-        return str;
+        return res;
     }
 };
