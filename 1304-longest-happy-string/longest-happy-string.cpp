@@ -1,42 +1,64 @@
 class Solution {
 public:
-    string s="";
-
-    int ac=0, bc=0, cc=0; 
-
     string longestDiverseString(int a, int b, int c) {
+        priority_queue<pair<int, char>>pq;
 
-        if(a<=0 && b<=0 && c<=0)
-        {    
-            return s;
+        if(a>0)
+        {
+            pq.push({a, 'a'});
         }
-               
-        if((a>0 && a>=b && a>=c && ac!=2) || (a>0 && (bc==2 || cc==2)))
-        {
-            s+='a';
-            ac++;
-            bc=0, cc=0;
-        
-            longestDiverseString(a-1, b, c);
-        }
-        else if((b>0 && b>=c && b>=a && bc!=2) || (b>0 && (ac==2 || cc==2)))
-        {
-            s+='b';
-            bc++;
-            ac=0, cc=0;
-                
-            longestDiverseString(a, b-1, c);
-        }   
-        else if((c>0 && c>=a && c>=b && cc!=2) || (c>0 && (ac==2 || bc==2)))
-        {
-            s+='c';
-            cc++;
-            ac=0, bc=0;
 
-            longestDiverseString(a, b, c-1);
+        if(b>0)
+        {
+            pq.push({b, 'b'});
         }
-        
-        return s;
 
+        if(c>0)
+        {
+            pq.push({c, 'c'});
+        }
+
+        string res;
+
+        while(!pq.empty())
+        {
+            auto [occ1, ch1]=pq.top();
+            pq.pop();
+
+            int len=res.length();
+
+            if(len>=2 && res[len-1]==ch1 && res[len-2]==ch1)
+            {
+                if(pq.empty())
+                {
+                    break;
+                }
+
+                auto [occ2, ch2]=pq.top();
+                pq.pop();
+
+                res+=ch2;
+                occ2--;
+
+                if(occ2>0)
+                {
+                    pq.push({occ2, ch2});
+                }
+
+                pq.push({occ1, ch1});
+            }
+            else 
+            {
+                res+=ch1;
+                occ1--;
+
+                if(occ1>0)
+                { 
+                    pq.push({occ1, ch1});
+                }
+            }
+        }
+
+        return res;
     }
 };
