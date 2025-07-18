@@ -27,10 +27,7 @@ public:
 
             while((maxQ.front()-minQ.front()>2) || seen.count(nums[r])>1)
             {
-                // if(seen.count(nums[l]))
-                // { 
-                    seen.erase(nums[l]);
-                // }
+                seen.erase(nums[l]);
 
                 if(!minQ.empty() && minQ.front()==nums[l])
                 { 
