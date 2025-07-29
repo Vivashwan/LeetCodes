@@ -1,31 +1,31 @@
 class Solution {
 private:
-    int func(vector<int>& nums, int n, int target, int ind, vector<vector<int>>& dp, int offset) {
-        if (ind == n) {
-            return (target == 0) ? 1 : 0;
+    void func(int ind, int n, vector<int>&nums, int target, int& count, int sum)
+    {
+        if(ind==n && sum==target)
+        {
+            count++;
+            return;
+        }
+        else if(ind==n)
+        {
+            return;
         }
 
-        if (dp[ind][target + offset] != -1) {
-            return dp[ind][target + offset];
-        }
+        sum+=nums[ind];
 
-        int pos = func(nums, n, target - nums[ind], ind + 1, dp, offset);
-        int neg = func(nums, n, target + nums[ind], ind + 1, dp, offset);
-
-        return dp[ind][target + offset] = pos + neg;
+        func(ind+1, n, nums, target, count, sum);
+        sum-=2*nums[ind];
+        func(ind+1, n, nums, target, count, sum);
     }
-
 public:
     int findTargetSumWays(vector<int>& nums, int target) {
-        int n = nums.size();
-        int sum = 0;
-        for (int num : nums) sum += num;
+        int n=nums.size();
 
-        if (abs(target) > sum) return 0;
+        int count=0, sum=0;
 
-        int offset = 1000;
-        vector<vector<int>> dp(n + 1, vector<int>(3002, -1));
+        func(0, n, nums, target, count, sum);
 
-        return func(nums, n, target, 0, dp, offset);
+        return count;
     }
 };
