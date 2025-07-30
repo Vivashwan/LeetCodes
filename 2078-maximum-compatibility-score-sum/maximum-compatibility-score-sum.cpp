@@ -6,13 +6,13 @@ public:
 
     void backtrack(int studentIdx, vector<bool>& used, int currSum)
     {
-        if(studentIdx==m)
+        if(studentIdx==n)
         {
             ans=max(ans, currSum);
             return;
         }
 
-        for(int mentor=0; mentor<m; mentor++)
+        for(int mentor=0; mentor<n; mentor++)
         {
             if(!used[mentor])
             {
@@ -24,18 +24,18 @@ public:
     }
 
     int maxCompatibilitySum(vector<vector<int>>& students, vector<vector<int>>& mentors) {
-        m=students.size();
-        n=students[0].size();
+        n=students.size();
+        m=students[0].size();
 
-        score.assign(m, vector<int>(m, 0));
+        score.assign(n, vector<int>(n, 0));
 
-        for(int i=0; i<m; i++)
+        for(int i=0; i<n; i++)
         {
-            for(int j=0; j<m; j++)
+            for(int j=0; j<n; j++)
             {
                 int cnt=0;
 
-                for(int k=0; k<n; k++)
+                for(int k=0; k<m; k++)
                 {
                     if(students[i][k]==mentors[j][k])
                     { 
@@ -47,10 +47,10 @@ public:
             }
         }
 
-        vector<bool>used(m, false);
+        vector<bool>used(n, false);
 
         backtrack(0, used, 0);
-        
+
         return ans;
     }
 };
