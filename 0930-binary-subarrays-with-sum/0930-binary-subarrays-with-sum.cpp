@@ -2,9 +2,10 @@ class Solution {
 private:
     int atMost(vector<int>&nums, int goal)
     {
-        int n=nums.size(), count=0, sum=0, left=0;
+        int n=nums.size();
+        int sum=0, left=0, right=0, count=0;
 
-        for(int right=0; right<n; right++)
+        while(right<n)
         {
             sum+=nums[right];
 
@@ -14,9 +15,10 @@ private:
                 left++;
             }
 
-            count+=(right-left+1); 
+            count+=(right-left+1);
+            right++; 
         }
-
+        
         return count;
     }
 public:
