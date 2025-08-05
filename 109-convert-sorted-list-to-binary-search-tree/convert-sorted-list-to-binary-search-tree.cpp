@@ -21,43 +21,30 @@
  */
 class Solution {
 private:
-    ListNode* currentNode;
-    int countNodes(ListNode* head)
+    TreeNode* func(ListNode* head, ListNode* tail)
     {
-        int count=0;
-
-        while(head)
-        {
-            count++;
-            head=head->next;
-        }
-
-        return count;
-    }
-
-    TreeNode* func(int start, int end)
-    {
-        if(start>end)
+        if(head==tail)
         {
             return nullptr;
         }
 
-        int mid = start+(end-start)/2;
+        ListNode* fast=head, *slow=head;
 
-        TreeNode* leftTree = func(start, mid-1);
-        TreeNode* root = new TreeNode(currentNode->val);
-        root->left = leftTree;
-        currentNode=currentNode->next;
-        root->right = func(mid+1, end);
+        while(fast!=tail && fast->next!=tail)
+        {
+            fast=fast->next->next;
+            slow=slow->next;
+        }
 
-        return root;
+        TreeNode* node=new TreeNode(slow->val);
+
+        node->left=func(head, slow);
+        node->right=func(slow->next, tail);
+
+        return node;
     }
 public:
     TreeNode* sortedListToBST(ListNode* head) {
-        int n = countNodes(head);
-
-        currentNode=head;
-
-        return func(0, n-1);
+        return func(head, nullptr);
     }
 };
