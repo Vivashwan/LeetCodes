@@ -11,11 +11,15 @@ public:
     }
     
     int pickIndex() {
-        int random = rand()%v.back();
+        // We generate a random number between [0,5]
+        int random = rand() % v.back();
 
+        // We binary search the prefix sum vector for first v[i] > random
+        // That means: "which interval does this random point fall into?"
         auto it = upper_bound(v.begin(), v.end(), random);
 
-        return it-v.begin();
+        // Return the corresponding index
+        return it - v.begin();
     }
 };
 
