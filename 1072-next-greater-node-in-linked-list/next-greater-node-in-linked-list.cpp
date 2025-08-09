@@ -11,29 +11,41 @@
 class Solution {
 public:
     vector<int> nextLargerNodes(ListNode* head) {
-        vector<int>values;
+        int length=0;
 
-        while(head)
+        ListNode* temp=head;
+
+        while(temp)
         {
-            values.push_back(head->val);
-            head=head->next;
+            temp=temp->next;
+            length++;
         }
 
-        int n=values.size();
-        vector<int>result(n, 0);
-        stack<int>st;
+        stack<pair<int, int>>st;
+        int index=0;
 
-        for(int i=0; i<n; i++)
+        vector<int>res(length, 0);
+
+        for(ListNode* curr=head; curr; curr=curr->next)
         {
-            while(!st.empty() && values[i]>values[st.top()])
+            if(st.empty() || curr->val<st.top().first)
             {
-                result[st.top()]=values[i];
-                st.pop();
+                st.push({curr->val, index});
             }
-            
-            st.push(i);
+            else
+            {
+                while(!st.empty() && curr->val>st.top().first)
+                {
+                    res[st.top().second]=curr->val;
+                    st.pop();
+                }
+
+                st.push({curr->val, index});
+            }
+
+            index++;
         }
 
-        return result;
+        return res;
     }
 };
