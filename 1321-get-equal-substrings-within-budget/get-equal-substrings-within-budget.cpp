@@ -1,30 +1,26 @@
 class Solution {
 public:
     int equalSubstring(string s, string t, int maxCost) {
-        int n = s.length();
+        int n=s.length(), left=0, sum=0, maxLen=0;
 
-        vector<int>prefix(n, 0);
-
-        for(int i=0; i<n; i++)
+        for(int right=0; right<n; right++)
         {
-            prefix[i]=abs(s[i]-t[i]);
-        }
+            sum+=abs((s[right]-'a')-(t[right]-'a'));
 
-        int left=0, right=0, res=INT_MIN, sum=0;
-
-        for(; right<n; right++)
-        {
-            sum+=prefix[right];
-
-            if(sum>maxCost)
+            if(sum<=maxCost)
             {
-                sum-=prefix[left];
-                left++;
+                maxLen=max(maxLen, right-left+1);
             }
-
-            res=max(res, right-left+1);
+            else
+            {
+                while(sum>maxCost)
+                {
+                    sum-=abs((s[left]-'a')-(t[left]-'a'));
+                    left++;
+                }
+            }
         }
 
-        return res;
+        return maxLen;
     }
 };
