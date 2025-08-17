@@ -1,50 +1,50 @@
 class Solution {
 public:
     int leastInterval(vector<char>& tasks, int n) {
-        unordered_map<char, int>mp;
-        
-        for(char &ch: tasks) 
-        {
-            mp[ch]++;
-        }
+        unordered_map<int, int>mp;
 
+        for(auto it: tasks)
+        {
+            mp[it]++;
+        }
+        
         priority_queue<int>pq;
 
-        int time=0;
-        
-        for(auto &it: mp) 
+        for(auto it:mp)
         {
             pq.push(it.second);
         }
-        
-        while(!pq.empty()) 
-        {
-            vector<int>temp;
 
-            for(int i=1; i<=n+1; i++) 
+        int time=0;
+
+        while(!pq.empty())
+        {
+            vector<int>slot;
+
+            for(int i=0; i<=n; i++)
             {
-                if(!pq.empty()) 
+                if(!pq.empty())
                 {
-                    temp.push_back(pq.top()-1); 
+                    slot.push_back(pq.top()-1);
                     pq.pop();
                 }
             }
-            
-            for(int &freq: temp) 
+
+            for(auto it: slot)
             {
-                if(freq > 0)
-                {    
-                    pq.push(freq);
+                if(it>0)
+                {
+                    pq.push(it);
                 }
             }
-            
+
             if(pq.empty())
             {
-                time += temp.size();
+                time+=slot.size();
             }
-            else time += (n+1);
+            else time+=n+1;
         }
-        
+
         return time;
     }
 };
