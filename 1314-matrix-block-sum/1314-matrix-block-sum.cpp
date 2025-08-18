@@ -1,33 +1,29 @@
 class Solution {
-public: 
-    int sizeX, sizeY;
-    int extractSum(int i, int j, const vector<vector<int> >& sum) {
-        if (i < 0 || j < 0) return 0;
-        if (i >= sizeX) i = sizeX - 1;
-        if (j >= sizeY) j = sizeY - 1;
-        return sum[i][j];
-    }
-        
-    vector<vector<int>> matrixBlockSum(vector<vector<int>>& mat, int K) {
-        sizeX = mat.size();
-        sizeY = mat[0].size();
-        
-        vector<vector<int>> sum(sizeX, vector<int>(sizeY, 0));
-        // Calculate prefix matrix 
-        for (int i = 0; i < sizeX; i++) {
-            for (int j = 0; j < sizeY; j++) {
-                sum[i][j] = mat[i][j] + extractSum(i-1, j, sum) + extractSum(i, j-1, sum) - extractSum(i-1, j-1, sum);
+public:
+    vector<vector<int>> matrixBlockSum(vector<vector<int>>& mat, int k) {
+        int n = mat.size(), m=mat[0].size();
+
+        vector<vector<int>>prefix(n+1, vector<int>(m+1, 0));
+
+        for(int i=1; i<=n; i++)
+        {
+            for(int j=1; j<=m; j++)
+            {
+                prefix[i][j]=mat[i-1][j-1]+prefix[i-1][j]+prefix[i][j-1]-prefix[i-1][j-1];
             }
         }
-        
-        // Use prefix matrix to calculate our sum
-        vector<vector<int>> ans(sizeX, vector<int>(sizeY, 0));
-        for (int i = 0; i < sizeX; i++) {
-            for (int j = 0; j < sizeY; j++) {
-                ans[i][j] = extractSum(i+K, j+K, sum) - extractSum(i+K, j-K-1,sum) - extractSum (i-K-1, j+K, sum) + extractSum(i-K-1, j-K-1, sum);
+
+        vector<vector<int>>res(n, vector<int>(m, 0));
+
+        for(int i=0; i<n; i++)
+        {
+            for(int j=0; j<m; j++)
+            {
+                int r1=max(0, i-k), r2=min(n-1, i+k), c1=max(0, j-k), c2=min(m-1, j+k);
+                res[i][j]=prefix[r2+1][c2+1]-prefix[r2+1][c1]-prefix[r1][c2+1]+prefix[r1][c1];
             }
         }
-        
-        return ans;
+
+        return res;
     }
 };
