@@ -1,35 +1,35 @@
 class Solution {
 public:
     bool canConstruct(string s, int k) {
-        int n = s.length();
+        int n=s.length();
 
-        if(k>n)
+        if(n<k)
         {
-            return 0;
+            return false;
         }
 
-        if(k==n)
+        unordered_map<char, int>mp;
+
+        for(auto it: s)
         {
-            return 1;
+            mp[it]++;
         }
 
-        vector<int>v(26, 0);
+        int countOdd=0;
 
-        for(int i=0; i<n; i++)
+        for(auto it: mp)
         {
-            v[s[i]-'a']++;
-        }
-
-        int count=0;
-
-        for(int i=0; i<26; i++)
-        {
-            if(v[i]%2==1)
+            if(it.second%2!=0)
             {
-                count++;
+                countOdd++;
             }
         }
 
-        return count<=k;
+        if(countOdd>k)
+        {
+            return false;
+        }
+
+        return true;
     }
 };
