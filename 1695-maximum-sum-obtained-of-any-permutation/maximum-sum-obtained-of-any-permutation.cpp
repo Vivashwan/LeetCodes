@@ -1,9 +1,9 @@
 class Solution {
 private:
-    int MOD = 1e9+7;
+    int MOD=1e9+7;
 public:
     int maxSumRangeQuery(vector<int>& nums, vector<vector<int>>& requests) {
-        int n = nums.size();
+        int n=nums.size();
 
         vector<int>prefix(n, 0);
 
@@ -25,12 +25,13 @@ public:
         sort(nums.begin(), nums.end());
         sort(prefix.begin(), prefix.end());
 
-        long long sum = 0;
-        for (int i = 0; i < n; i++) {
-            sum = (sum + (long long) prefix[i] * nums[i]) % MOD;
+        long long res=0;
+
+        for(int i=0; i<n; i++)
+        {
+            res=(res+((long long)nums[i]*prefix[i]))%MOD;
         }
 
-
-        return sum%MOD;
+        return res%MOD;
     }
 };
