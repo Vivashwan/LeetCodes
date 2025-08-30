@@ -1,16 +1,16 @@
 class Solution {
 public:
     int minSubarray(vector<int>& nums, int p) {
-        int n = nums.size();
+        int n=nums.size();
 
-        int total = 0;
+        int total=0;
 
         for(auto it: nums)
         {
             total=(total+it)%p;
         }
 
-        int rem = total%p;
+        int rem=total%p;
 
         if(rem==0)
         {
@@ -19,24 +19,24 @@ public:
 
         unordered_map<int, int>mp;
 
-        mp[0] = -1;
+        mp[0]=-1;
 
-        int res = n, sum = 0;
+        int res=n, sum=0;
 
         for(int i=0; i<n; i++)
         {
-            sum = (sum+nums[i])%p;
+            sum=(sum+nums[i])%p;
 
-            int check = (sum-rem+p)%p;
+            int check=(sum-rem+p)%p;
 
             if(mp.find(check)!=mp.end())
             {
-                res = min(res, i - mp[check]);
+                res=min(res, i-mp[check]);
             }
 
-            mp[sum] = i;
+            mp[sum]=i;
         }
 
-        return res == n ? -1: res;
+        return res==n ? -1:res;
     }
 };
