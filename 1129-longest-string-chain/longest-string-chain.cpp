@@ -32,6 +32,7 @@ private:
         }
         else return false;
     }
+    
 public:
     int longestStrChain(vector<string>& words) {
         int n=words.size();
