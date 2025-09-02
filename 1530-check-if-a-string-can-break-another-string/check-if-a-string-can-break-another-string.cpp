@@ -1,8 +1,8 @@
 class Solution {
 public:
     bool checkIfCanBreak(string s1, string s2) {
-        int n = s1.length();
-
+        int n=s1.size();
+        
         sort(s1.begin(), s1.end());
         sort(s2.begin(), s2.end());
 
@@ -15,7 +15,7 @@ public:
                 continue;
             }
 
-            flag1 = false;
+            flag1=false;
         }
 
         for(int i=0; i<n; i++)
@@ -25,7 +25,7 @@ public:
                 continue;
             }
 
-            flag2 = false;
+            flag2=false;
         }
 
         return flag1 || flag2;
