@@ -1,19 +1,26 @@
 class Solution {
 public:
     vector<int> getSumAbsoluteDifferences(vector<int>& nums) {
-        int n = nums.size();
-        vector<int>ans;
+        int n=nums.size();
+        vector<int>prefix(n, 0);
+        
+        prefix[0]=nums[0];
 
-        int leftSum = 0, rightSum = 0;
-        for(int x:nums) rightSum += x;
-
-        for(int i=0; i<n; i++){
-            int absDiff = ((i*nums[i]) - leftSum) + (rightSum - (n-1-i+1)*nums[i]);
-            ans.push_back(absDiff);
-            leftSum += nums[i];
-            rightSum -= nums[i];
+        for(int i=1; i<n; i++) 
+        {
+            prefix[i]=prefix[i-1]+nums[i];
         }
 
-        return ans;
+        vector<int>res(n, 0);
+
+        for(int i=0; i<n; i++) 
+        {
+            long left=(long)nums[i]*i - (i>0 ? prefix[i-1] : 0);
+            long right=(prefix[n-1]-prefix[i]) - (long)nums[i]*(n-i-1);
+
+            res[i]=left+right;
+        }
+
+        return res;
     }
 };
