@@ -1,23 +1,23 @@
 class Solution {
 public:
     vector<int> findSmallestSetOfVertices(int n, vector<vector<int>>& edges) {
-        vector<int>inorder(n, 0);
+        vector<int>inDegree(n, 0);
 
         for(auto it: edges)
         {
-            inorder[it[1]]++;
+            inDegree[it[1]]++;
         }
 
-        vector<int>ans;
+        vector<int>res;
 
-        for(int i=0; i<n; i++)
+        for(int i=0; i<inDegree.size(); i++)
         {
-            if(inorder[i]==0)
+            if(inDegree[i]==0)
             {
-                ans.push_back(i);
+                res.push_back(i);
             }
         }
 
-        return ans;
+        return res;
     }
 };
