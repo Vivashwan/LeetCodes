@@ -1,49 +1,34 @@
 class Solution {
 private:
-    void func(vector<int>&vertices, int target, vector<vector<int>>&res, vector<int>temp, vector<int>&visited, int n, vector<vector<int>>&adj)
+    void func(int u, int target, vector<int>temp, vector<vector<int>>&res, vector<vector<int>>&graph)
     {
-        for(auto it: vertices)
+        temp.push_back(u);
+
+        if(u==target)
         {
-            if(it==target)
-            {
-                temp.push_back(it);
+            res.push_back(temp);
+            return;
+        }
 
-                res.push_back(temp);
-
-                temp.pop_back();
-            }
-            else if(!visited[it])
-            {
-                visited[it]=true;
-                temp.push_back(it);
-
-                func(adj[it], target, res, temp, visited, n, adj);
-
-                temp.pop_back();
-                visited[it]=false;
-            }
+        for(auto v: graph[u])
+        {
+            func(v, target, temp, res, graph);
         }
     }
 public:
     vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
         int n=graph.size();
 
-        int target=n-1;
-
-        vector<vector<int>>adj(n);
-
-        for(int i=0; i<n; i++)
-        {
-            adj[i].insert(adj[i].end(), graph[i].begin(), graph[i].end());
-        }
-
         vector<vector<int>>res;
 
-        vector<int>temp, visited(n);
+        for(auto u: graph[0])
+        {
+            vector<int>temp;
 
-        temp.push_back(0);
+            temp.push_back(0);
 
-        func(adj[0], target, res, temp, visited, n, adj);
+            func(u, n-1, temp, res, graph);
+        }
 
         return res;
     }
