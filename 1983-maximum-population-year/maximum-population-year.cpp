@@ -3,7 +3,7 @@ public:
     int maximumPopulation(vector<vector<int>>& logs) {
         vector<int>prefixSum(2051, 0);
 
-        int res = 0;
+        int res=0;
 
         for(auto it: logs)
         {
@@ -17,7 +17,7 @@ public:
 
             if(prefixSum[i]>prefixSum[res])
             {
-                res = i;
+                res=i;
             }
         }
 
