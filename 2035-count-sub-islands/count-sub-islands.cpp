@@ -1,50 +1,52 @@
 class Solution {
-private:
-    bool isLand;
+public:
+    vector<int>dirX={0, 0, 1, -1}, dirY={1, -1, 0, 0};
     
-    void dfs(int i, int j, vector<vector<int>>& grid1, vector<vector<int>>& grid2, int n, int m) {
-        if(grid1[i][j] == 0) 
+    void dfs(int x, int y, vector<vector<int>>& grid) 
+    {
+        int m=grid.size(), n=grid[0].size();
+        
+        grid[x][y]=0;
+        
+        for(int d=0; d<4; d++) 
         {
-            isLand = false;
-        }
-
-        grid2[i][j] = 0;
-
-        int directions[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-
-        for(auto dir:directions) 
-        {
-            int x = i + dir[0], y = j + dir[1];
-
-            if(x>=0 && x<n && y>=0 && y<m && grid2[x][y]==1) 
+            int nx=x+dirX[d], ny=y+dirY[d];
+            
+            if(nx>=0 && ny>=0 && nx<m && ny<n && grid[nx][ny]==1) 
             {
-                dfs(x, y, grid1, grid2, n, m);
+                dfs(nx, ny, grid);
             }
         }
     }
-
-public:
+    
     int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
-        int count = 0;
-        int n = grid2.size(), m = grid2[0].size();
-
-        for(int i=0; i<n; i++) 
+        int m=grid1.size(), n=grid1[0].size();
+        
+        for(int i=0; i<m; i++) 
         {
-            for(int j=0; j<m; j++) 
+            for(int j=0; j<n; j++) 
             {
-                if(grid2[i][j]==1) 
+                if(grid2[i][j]==1 && grid1[i][j]==0) 
                 {
-                    isLand = true;
-                    dfs(i, j, grid1, grid2, n, m);
-                    
-                    if(isLand) 
-                    {
-                        count++;
-                    }
+                    dfs(i, j, grid2);
                 }
             }
         }
+        
+        int subIslands=0;
 
-        return count;
+        for(int i=0; i<m; i++) 
+        {
+            for(int j=0; j<n; j++) 
+            {
+                if(grid2[i][j]==1) 
+                {
+                    subIslands++;
+                    dfs(i, j, grid2);
+                }
+            }
+        }
+        
+        return subIslands;
     }
 };
