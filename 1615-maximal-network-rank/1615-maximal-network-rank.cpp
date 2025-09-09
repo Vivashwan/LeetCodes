@@ -1,32 +1,40 @@
 class Solution {
 public:
-    int maximalNetworkRank(int n, vector<vector<int>>& roads) { 
-        unordered_map<int, set<int>> mp; 
+    int maximalNetworkRank(int n, vector<vector<int>>& roads) {
+        vector<int>degree(n, 0);
 
-        for(int i = 0; i < roads.size(); i++) 
+        unordered_set<string>directRoads;
+        
+        for(auto& road: roads) 
         {
-            int u = roads[i][0], v = roads[i][1];
-            mp[u].insert(v);
-            mp[v].insert(u);
+            int u=road[0], v=road[1];
+
+            degree[u]++, degree[v]++;
+            
+            string key=to_string(min(u, v))+"_"+to_string(max(u, v));
+
+            directRoads.insert(key);
         }
-
-        int maxim = 0;
-
-        for(int i = 0; i < n; i++) 
+        
+        int maxRank=0;
+        
+        for(int i=0; i<n; i++) 
         {
-            for(int j = i + 1; j < n; j++) 
+            for(int j=i+1; j<n; j++) 
             {
-                int currentRank = mp[i].size() + mp[j].size();
+                int rank=degree[i]+degree[j];
+                
+                string key=to_string(i)+"_"+to_string(j);
 
-                if (mp[i].find(j) != mp[i].end()) 
+                if(directRoads.count(key)) 
                 {
-                    currentRank--;
+                    rank--;
                 }
                 
-                maxim = max(maxim, currentRank);
+                maxRank=max(maxRank, rank);
             }
         }
-
-        return maxim;
+        
+        return maxRank;
     }
 };
