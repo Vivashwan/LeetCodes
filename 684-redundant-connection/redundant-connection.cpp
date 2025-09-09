@@ -1,17 +1,17 @@
 class Solution {
 private:
-    bool func(int u, int v, unordered_map<int, vector<int>>&adj, unordered_set<int>&visited)
+    bool func(int u, int v, unordered_map<int, vector<int>>&adj, vector<bool>&visited)
     {
         if(u==v)
         {
             return true;
         }
 
-        visited.insert(u);
+        visited[u]=true;
 
         for(auto it: adj[u])
         {
-            if(visited.count(it)==0)
+            if(!visited[it])
             {
                 if(func(it, v, adj, visited))
                 {
@@ -32,7 +32,7 @@ public:
 
             if(!adj[u].empty() && !adj[v].empty())
             {
-                unordered_set<int>visited;
+                vector<bool>visited(1001, false);
 
                 if(func(u, v, adj, visited))
                 {
