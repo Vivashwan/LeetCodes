@@ -1,34 +1,47 @@
+#include <vector>
+#include <queue>
+#include <cmath>
+#include <climits>
+using namespace std;
+
 class Solution {
 public:
     int minimumEffortPath(vector<vector<int>>& heights) {
-        int n = heights.size();
-        int m = heights[0].size();
-        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+        int n=heights.size(), m=heights[0].size();
+
+        vector<vector<int>>dist(n, vector<int>(m, INT_MAX));
+        
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<>>pq;
+
+        dist[0][0]=0;
         pq.push({0, {0, 0}});
 
-        vector<vector<int>> dist(n, vector<int>(m, 1e9));
-        dist[0][0] = 0;
+        int dirX[4]={-1, 0, 1, 0}, dirY[4]={0, 1, 0, -1};
 
-        int delrow[4] = {-1, 0, 1, 0};
-        int delcol[4] = {0, 1, 0, -1};
-
-        while(!pq.empty())
+        while(!pq.empty()) 
         {
-            int diff = pq.top().first;
-            int x = pq.top().second.first;
-            int y = pq.top().second.second;
+            auto [effort, pos]=pq.top();
             pq.pop();
-            if(x == n-1 && y == m-1) return diff;
 
-            for(int i=0; i<4; ++i){
-                int nr = x+delrow[i];
-                int nc = y+delcol[i];
+            int x=pos.first, y=pos.second;
 
-                if(nr>=0 && nr<n && nc>=0 && nc<m){
-                    int newEffort = max(abs(heights[x][y] - heights[nr][nc]), diff);
-                    if(newEffort < dist[nr][nc]){
-                        dist[nr][nc] = newEffort;
-                        pq.push({newEffort, {nr, nc}});
+            if(x==n-1 && y==m-1)
+            { 
+                return effort;
+            }
+
+            for(int k=0; k<4; k++) 
+            {
+                int newX=x+dirX[k], newY=y+dirY[k];
+
+                if(newX>=0 && newX<n && newY>=0 && newY<m) 
+                {
+                    int currentEffort=max(effort, abs(heights[newX][newY]-heights[x][y]));
+
+                    if(currentEffort<dist[newX][newY]) 
+                    {
+                        dist[newX][newY]=currentEffort;
+                        pq.push({currentEffort, {newX, newY}});
                     }
                 }
             }
