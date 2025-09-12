@@ -1,39 +1,54 @@
 class Solution {
 private:
-    bool dfs(unordered_map<int, vector<int>>&mp, int a, int b, vector<vector<int>>&dp)
+    bool dfs(int start, int end, unordered_map<int, vector<int>>&mp, vector<bool>&visited)
     {
-        if(dp[a][b]!=-1)
+        if(start==end)
         {
-            return dp[a][b];
+            return true;
         }
 
-        for(int i=0; i<mp[a].size(); i++)
+        visited[start]=true;
+
+        for(auto it: mp[start])
         {
-            if(mp[a][i]==b || dfs(mp, mp[a][i], b, dp))
+            if(!visited[it])
             {
-                return dp[a][b] = true;
+                if(dfs(it, end, mp, visited)==true)
+                {
+                    return true;
+                }
             }
         }
 
-        return dp[a][b] = false;
+        return false;
     }
 public:
     vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
         unordered_map<int, vector<int>>mp;
-        vector<vector<int>>dp(numCourses, vector<int>(numCourses, -1));
 
-        for(int i=0; i<prerequisites.size(); i++)
+        for(auto it: prerequisites)
         {
-            mp[prerequisites[i][1]].push_back(prerequisites[i][0]);
-            dp[prerequisites[i][1]][prerequisites[i][0]] = 1;
+            mp[it[0]].push_back(it[1]);
         }
 
         vector<bool>res;
 
-        for(int i=0; i<queries.size(); i++)
+        for(auto it: queries)
         {
-            bool p = dfs(mp, queries[i][1], queries[i][0], dp);
-            res.push_back(p);
+            int start=it[0], end=it[1];
+
+            if(mp.find(start)==mp.end())
+            {
+                res.push_back(false);
+            }
+            else
+            {
+                vector<bool>visited(numCourses, false);
+
+                bool state=dfs(start, end, mp, visited);
+
+                res.push_back(state);
+            }
         }
 
         return res;
