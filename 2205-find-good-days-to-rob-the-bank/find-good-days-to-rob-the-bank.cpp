@@ -1,7 +1,7 @@
 class Solution {
 public:
     vector<int> goodDaysToRobBank(vector<int>& security, int time) {
-        int n = security.size();
+        int n=security.size();
 
         vector<int>left(n, 0), right(n, 0), res;
 
