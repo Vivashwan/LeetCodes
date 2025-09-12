@@ -1,44 +1,34 @@
 class Solution {
 public:
     vector<long long> getDistances(vector<int>& arr) {
-        int n = arr.size();
+        int n=arr.size();
+        vector<long long>answer(n, 0);
+        
+        unordered_map<int, long long>countMap, sumMap;
 
-        unordered_map<int, pair<long, long>>mp;
-
-        vector<long long>res(n);
-
-        for(int i=0; i<n; i++)
+        for(int i=0; i<n; i++) 
         {
-            auto [count, val] = mp[arr[i]];
+            int num=arr[i];
 
-            if(count==0)
-            {
-                mp[arr[i]] = {1, i};
-                continue;
-            }
+            answer[i]+=countMap[num] * (long long)i - sumMap[num];
 
-            res[i] = i*count-val;
-            mp[arr[i]].second+=i;
-            mp[arr[i]].first++;
+            countMap[num]+=1;
+            sumMap[num]+=i;
         }
 
-        mp.clear();
+        countMap.clear();
+        sumMap.clear();
 
-        for(int i=n-1; i>=0; i--)
+        for(int i=n-1; i>=0; i--) 
         {
-            auto [count, val] = mp[arr[i]];
+            int num=arr[i];
 
-            if(count==0)
-            {
-                mp[arr[i]] = {1, i};
-                continue;
-            }
+            answer[i]+=sumMap[num] - countMap[num] * (long long)i;
 
-            res[i] += val-i*count;
-            mp[arr[i]].second+=i;
-            mp[arr[i]].first++;
+            countMap[num]+=1;
+            sumMap[num]+=i;
         }
 
-        return res;
+        return answer;
     }
 };
