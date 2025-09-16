@@ -1,70 +1,75 @@
 class Solution {
 private:
-    int MOD = 1e9+7;
+    vector<int>dist, memo;
+    vector<vector<pair<int, int>>>graph;
 
-    int dfs(int node, int end, vector<int>&dist, unordered_map<int, vector<pair<int, int>>>&adj, vector<int>&dp)
+    int MOD=1e9+7;
+
+    int dfs(int node, int n) 
     {
-        if(node==end)
-        {
-            return dp[node]=1;
+        if(node==n)
+        { 
+            return 1;
         }
 
-        if(dp[node]!=-1)
-        {
-            return dp[node];
+        if(memo[node]!=-1)
+        { 
+            return memo[node];
         }
 
-        int count=0;
+        long long paths=0;
 
-        for(auto it: adj[node])
+        for(auto& [nei, w]: graph[node]) 
         {
-            if(dist[node]>dist[it.first])
+            if(dist[node]>dist[nei]) 
             {
-                int path = dfs(it.first, end, dist, adj, dp);
-                count = (count+path)%MOD;
+                paths=(paths+dfs(nei, n))%MOD;
             }
         }
 
-        return dp[node]=count;
+        return memo[node]=paths;
     }
+
 public:
     int countRestrictedPaths(int n, vector<vector<int>>& edges) {
-        unordered_map<int, vector<pair<int, int>>>adj;
+        graph.resize(n+1);
 
-        for(int i=0; i<edges.size(); i++)
+        for(auto& edge: edges) 
         {
-            adj[edges[i][0]].push_back({edges[i][1], edges[i][2]});
-            adj[edges[i][1]].push_back({edges[i][0], edges[i][2]});
+            int u=edge[0], v=edge[1], w=edge[2];
+            graph[u].push_back({v, w});
+            graph[v].push_back({u, w});
         }
 
-        vector<int>dist(n+1, INT_MAX);
+        dist.resize(n+1, INT_MAX);
+        dist[n]=0;
 
-        dist[n] = 0;
-
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>>pq;
-
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>>pq;
         pq.push({0, n});
 
-        while(!pq.empty())
+        while(!pq.empty()) 
         {
-            int dis = pq.top().first, node = pq.top().second;
+            auto [d, node]=pq.top(); 
             pq.pop();
 
-            for(auto it: adj[node])
+            if(d>dist[node])
+            { 
+                continue;
+            }
+
+            for(auto& [nei, w]: graph[node]) 
             {
-                int adjNode = it.first, adjDist = it.second;
-
-                if(dist[adjNode]>dis+adjDist)
+                if(dist[nei]>d+w) 
                 {
-                    dist[adjNode]=dis+adjDist;
+                    dist[nei]=d+w;
 
-                    pq.push({dist[adjNode], adjNode});
+                    pq.push({dist[nei], nei});
                 }
             }
         }
 
-        vector<int>dp(n+1, -1);
+        memo.assign(n+1, -1);
 
-        return dfs(1, n, dist, adj, dp);
+        return dfs(1, n);
     }
 };
