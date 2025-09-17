@@ -1,50 +1,52 @@
 class Solution {
+private:
+    int MOD=1e9+7;
 public:
     int countPaths(int n, vector<vector<int>>& roads) {
-        const long long MOD = 1e9 + 7;
-        vector<pair<int, int>> adj[n];
+        unordered_map<int, vector<pair<int, int>>>adj;
 
-        for (int i = 0; i < roads.size(); i++) {
-            adj[roads[i][0]].push_back({roads[i][1], roads[i][2]});
-            adj[roads[i][1]].push_back({roads[i][0], roads[i][2]});
+        for(auto& road: roads)
+        {
+            int u=road[0], v=road[1], time=road[2];
+
+            adj[u].push_back({v, time});
+            adj[v].push_back({u, time});
         }
 
-        priority_queue<pair<long long, long long>, 
-        vector<pair<long long, long long>>, 
-        greater<pair<long long,long long>>>  pq;
+        priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<>>pq;
+        
+        vector<long long>dist(n, LLONG_MAX);
+        vector<int>ways(n, 0);
 
-        vector<long long> time_to_reach(n, LONG_MAX);
-        vector<long long> ways(n, 0);
-
+        dist[0]=0, ways[0]=1;
+        
         pq.push({0, 0});
-        time_to_reach[0] = 0;
-        ways[0] = 1;
 
-        while(!pq.empty()){
-            long long time = pq.top().first;
-            long long node = pq.top().second;
-
+        while(!pq.empty()) 
+        {
+            auto [d, u]=pq.top();
             pq.pop();
 
-            if (time > time_to_reach[node]) continue;
+            if(d>dist[u])
+            { 
+                continue;
+            }
 
-
-            for(auto it : adj[node]){
-                long long nxt_node = it.first;
-                long long new_time = it.second;
-
-                if(time_to_reach[nxt_node] > time + new_time){
-                    time_to_reach[nxt_node] = time + new_time;
-                    ways[nxt_node] = ways[node];
-                    pq.push({time_to_reach[nxt_node], nxt_node});
-                }
-                 else if (time_to_reach[nxt_node] == time + new_time) {
-                    ways[nxt_node] = (ways[nxt_node] + ways[node]) % MOD;
-
+            for(auto& [v, time]: adj[u]) 
+            {
+                if(dist[v]>d+time) 
+                {
+                    dist[v]=d+time;
+                    ways[v]=ways[u];
+                    pq.push({dist[v], v});
+                } 
+                else if(dist[v]==d+time) 
+                {
+                    ways[v]=(ways[v]+ways[u])%MOD;
                 }
             }
         }
 
-        return ways[n-1]% MOD;
+        return ways[n-1];
     }
 };
