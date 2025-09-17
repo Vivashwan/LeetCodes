@@ -1,44 +1,64 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-class Solution {
+class Solution{
 public:
-    int minimumJumps(vector<int>& forbidden, int a, int b, int x) {
-        int limit = max(x, *max_element(forbidden.begin(), forbidden.end()))+a+b;
-        vector<vector<int>> dp(limit+1, vector<int>(2, INT_MAX));
-        unordered_set<int>s(forbidden.begin(), forbidden.end());
+    struct State 
+    {
+        int position;
+        bool backUsed;
+    };
 
-        queue<pair<int, bool>> q; 
-        q.push({0, true});
-        dp[0][1] = 0; 
+    int minimumJumps(vector<int>&forbidden, int a, int b, int x) 
+    {
+        unordered_set<int>forbiddenSet(forbidden.begin(), forbidden.end());
+        unordered_set<string>visited;
+        
+        queue<State>q;
+        q.push({0, false});
+        visited.insert("0_0");
 
+        int steps=0;
+        int upperLimit=max(x+b, *max_element(forbidden.begin(), forbidden.end()))+a+b;
+        
         while(!q.empty()) 
         {
-            auto [pos, canMoveBack] = q.front();
-            q.pop();
-
-            int jumps = dp[pos][canMoveBack];
-
-            if(pos==x)
-            { 
-                return jumps;
-            }
-
-            int forward = pos+a;
-            if(forward<=limit && !s.count(forward) && dp[forward][1]==INT_MAX) 
+            int size=q.size();
+            
+            while(size--) 
             {
-                dp[forward][1] = jumps+1;
-                q.push({forward, true});
-            }
+                State current=q.front();
+                q.pop();
+                
+                int pos=current.position;
+                bool backUsed=current.backUsed;
+                
+                if(pos==x)
+                { 
+                    return steps;
+                }
+                
+                int forwardPos=pos+a;
 
-            int backward = pos-b;
-            if(canMoveBack && backward>=0 && !s.count(backward) && dp[backward][0]==INT_MAX) 
-            {
-                dp[backward][0] = jumps+1;
-                q.push({backward, false});
+                string forwardKey=to_string(forwardPos)+"_0";
+
+                if(forwardPos<=upperLimit && forbiddenSet.find(forwardPos)==forbiddenSet.end() && visited.find(forwardKey)==visited.end()) 
+                {
+                    visited.insert(forwardKey);
+                    q.push({forwardPos, false});
+                }
+                
+                int backwardPos=pos-b;
+
+                string backwardKey=to_string(backwardPos)+"_1";
+
+                if(!backUsed && backwardPos>=0 && forbiddenSet.find(backwardPos)==forbiddenSet.end() && visited.find(backwardKey)==visited.end()) 
+                {
+                    visited.insert(backwardKey);
+                    q.push({backwardPos, true});
+                }
             }
+            
+            steps++;
         }
-
-        return -1; 
+        
+        return -1;
     }
 };
