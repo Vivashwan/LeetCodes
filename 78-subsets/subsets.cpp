@@ -1,19 +1,25 @@
 class Solution {
 public:
     vector<vector<int>> subsets(vector<int>& nums) {
-        vector<vector<int>>subs={{}};
+        int n=nums.size();
 
-        for(auto it: nums)
-        { 
-            int n=subs.size();
+        vector<vector<int>>res;
 
-            for(int i=0; i<n; i++) 
+        for(int mask=0; mask<(1<<n); mask++)
+        {
+            vector<int>subsets;
+
+            for(int i=0; i<n; i++)
             {
-                subs.push_back(subs[i]); 
-                subs.back().push_back(it);
+                if(mask & (1<<i))
+                {
+                    subsets.push_back(nums[i]);
+                }
             }
+
+            res.push_back(subsets);
         }
 
-        return subs;
+        return res;
     }
 };
