@@ -1,31 +1,30 @@
 class Solution {
 public:
     vector<int> decode(vector<int>& encoded) {
-        int n = encoded.size();
+        int n=encoded.size()+1;
 
-        int X = 0;
+        int total=0;
 
-        for(int i=1; i<=n+1; i++)
+        for(int i=1; i<=n; i++)
         {
-            X^=i;
+            total^=i;
         }
 
-        for(int i=1; i<n; i+=2)
+        int oddXor=0;
+
+        for(int i=1; i<encoded.size(); i+=2)
         {
-            X^=encoded[i];
+            oddXor^=encoded[i];
         }
 
-        vector<int>res;
+        vector<int>perm(n);
+        perm[0]=total^oddXor;
 
-        res.push_back(X);
-
-        for(int i=0; i<n; i++)
+        for(int i=1; i<n; i++)
         {
-            X^=encoded[i];
-            res.push_back(X);
+            perm[i]=perm[i-1]^encoded[i-1];
         }
 
-
-        return res;
+        return perm;
     }
 };
