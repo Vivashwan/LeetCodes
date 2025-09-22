@@ -1,50 +1,41 @@
 class Solution {
-private:
-    bool isSafe(vector<string>&v, string str1)
-    {
-        for(auto it: v)
-        {
-            if(it==str1)
-            {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-
 public:
     vector<string> findRepeatedDnaSequences(string s) {
-        int i=0;
         int n=s.length();
 
-        vector<string>v;
-        unordered_set<string>seen;
-
-        if(n<10) 
+        if(n<10)
         {
-            return v;
+            return {};
         }
 
-        while(i<=n-10) 
-        {
-            string str=s.substr(i, 10);
+        unordered_map<char, int>mp={{'A', 0}, {'C', 1}, {'G', 2}, {'T', 3}};
 
-            if(seen.count(str)==0)
+        unordered_set<int>seen, repeated;
+        vector<string>res;
+
+        int mask=0;
+
+        for(int i=0; i<n; i++)
+        {
+            mask=((mask<<2) | mp[s[i]]) & ((1<<20)-1);
+
+            if(i>=9) 
             {
-                seen.insert(str);
-            } 
-            else 
-            {
-                if(v.empty() || isSafe(v, str))
+                if(seen.count(mask))
                 {
-                    v.push_back(str);
+                    if(!repeated.count(mask))
+                    {
+                        res.push_back(s.substr(i-9, 10));
+                        repeated.insert(mask);
+                    }
+                }
+                else
+                {
+                    seen.insert(mask);
                 }
             }
-
-            i++;
         }
 
-        return v;
+        return res;
     }
 };
