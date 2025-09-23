@@ -1,30 +1,36 @@
 class Solution {
 public:
     char findKthBit(int n, int k) {
-        unordered_map<int, string>mp;
+        char res;
+        int invertCount=0;
 
-        mp[1]="0";
-
-        for(int i=2; i<=n; i++)
+        while(n>1)
         {
-            int j = mp[i-1].length()-1;
+            int len=(1<<n)-1;
 
-            string s1 = "";
+            int mid=(len+1)/2;
 
-            while(j>=0)
+            if(k==mid)
             {
-                if(mp[i-1][j--]=='0')
-                {
-                    s1+='1';
-                }
-                else s1+='0';
+                break;
             }
 
-            mp[i]+=mp[i-1]+'1'+s1;
+            if(k>mid)
+            {
+                k=len-k+1;
+                invertCount^=1;
+            }
+
+            n--;
         }
 
-        string res = mp[n];
+        res = (k==1) ? '0': '1';
 
-        return res[k-1];
+        if(invertCount)
+        {
+            res = (res=='0') ? '1' : '0';
+        }
+
+        return res;
     }
 };
