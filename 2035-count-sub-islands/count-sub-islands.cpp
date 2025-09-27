@@ -1,52 +1,95 @@
 class Solution {
-public:
-    vector<int>dirX={0, 0, 1, -1}, dirY={1, -1, 0, 0};
-    
-    void dfs(int x, int y, vector<vector<int>>& grid) 
+private:
+    vector<int>parent;
+
+    int find(int x)
     {
-        int m=grid.size(), n=grid[0].size();
-        
-        grid[x][y]=0;
-        
-        for(int d=0; d<4; d++) 
+        while(parent[x]!=x)
         {
-            int nx=x+dirX[d], ny=y+dirY[d];
-            
-            if(nx>=0 && ny>=0 && nx<m && ny<n && grid[nx][ny]==1) 
-            {
-                dfs(nx, ny, grid);
-            }
+            parent[x]=parent[parent[x]];
+            x=parent[x];
+        }
+
+        return x;
+    }
+
+    void unite(int x, int y)
+    {
+        int px=find(x), py=find(y);
+
+        if(px!=py)
+        {
+            parent[px]=py;
         }
     }
-    
+public:
     int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
-        int m=grid1.size(), n=grid1[0].size();
-        
-        for(int i=0; i<m; i++) 
-        {
-            for(int j=0; j<n; j++) 
-            {
-                if(grid2[i][j]==1 && grid1[i][j]==0) 
-                {
-                    dfs(i, j, grid2);
-                }
-            }
-        }
-        
-        int subIslands=0;
+        int n=grid1.size(), m=grid1[0].size();
 
-        for(int i=0; i<m; i++) 
+        parent.resize(n*m);
+
+        for(int i=0; i<n*m; i++)
         {
-            for(int j=0; j<n; j++) 
+            parent[i]=i;
+        }
+
+        for(int i=0; i<n; i++)
+        {
+            for(int j=0; j<m; j++)
             {
-                if(grid2[i][j]==1) 
+                if(grid2[i][j]==1)
                 {
-                    subIslands++;
-                    dfs(i, j, grid2);
+                    int id=i*m+j;
+
+                    if(i>0 && grid2[i-1][j])
+                    {
+                        unite((i-1)*m+j, id);
+                    }
+
+                    if(j>0 && grid2[i][j-1])
+                    {
+                        unite(i*m+j-1, id);
+                    }
                 }
             }
         }
-        
-        return subIslands;
+
+        unordered_map<int, bool>valid;
+
+        for(int i=0; i<n; i++)
+        {
+            for(int j=0; j<m; j++)
+            {
+                if(grid2[i][j]==1)
+                {
+                    int root=find(i*m+j);
+                    valid[root]=true;
+                }
+            }
+        }
+
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0; j<m; j++)
+            {
+                if(grid2[i][j]==1 && grid1[i][j]==0)
+                {
+                    int root=find(i*m+j);
+                    valid[root]=false;
+                }
+            }
+        }
+
+        int count=0;
+
+        for(auto &it: valid)
+        {
+            if(it.second)
+            { 
+                count++;
+            }
+        }
+
+        return count;
     }
 };
