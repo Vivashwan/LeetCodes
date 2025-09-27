@@ -1,61 +1,90 @@
 class Solution {
 private:
-    void func(int i, int j, vector<vector<int>>&grid)
+    vector<int>parent;
+
+    int find(int x)
     {
-        int n=grid.size(), m=grid[0].size();
-        grid[i][j]=0;
-
-        int dirX[4]={-1, 0, 0, 1}, dirY[4]={0, -1, 1, 0};
-
-        for(int k=0; k<4; k++)
+        while(parent[x]!=x)
         {
-            int newX=i+dirX[k], newY=j+dirY[k];
+            parent[x]=parent[parent[x]];
+            x=parent[x];
+        }
 
-            if(newX>=0 && newX<n && newY>=0 && newY<m && grid[newX][newY]==1)
-            {
-                func(newX, newY, grid);
-            }
+        return x;
+    }
+
+    void unite(int x, int y)
+    {
+        int px=find(x), py=find(y);
+
+        if(px!=py)
+        {
+            parent[px]=py;
         }
     }
+
 public:
     int numEnclaves(vector<vector<int>>& grid) {
         int n=grid.size(), m=grid[0].size();
 
+        parent.resize(n*m);
+
+        for(int i=0; i<n*m; i++)
+        {
+            parent[i]=i;
+        }
+
         for(int i=0; i<n; i++)
         {
-            if(grid[i][0]==1)
+            for(int j=0; j<m; j++)
             {
-                func(i, 0, grid);
-            }
+                if(grid[i][j]==1)
+                {
+                    int id=i*m+j;
 
-            if(grid[i][m-1]==1)
-            {
-                func(i, m-1, grid);
+                    if(i>0 && grid[i-1][j]==1)
+                    {
+                        unite(id, (i-1)*m+j);
+                    }
+
+                    if(j>0 && grid[i][j-1]==1)
+                    {
+                        unite(id, i*m+j-1);
+                    }
+                }
             }
         }
 
-        for(int j=1; j<m-1; j++)
-        {
-            if(grid[0][j]==1)
-            {
-                func(0, j, grid);
-            }
+        unordered_set<int>borderParents;
 
-            if(grid[n-1][j]==1)
+        for(int i=0; i<n; i++) 
+        {
+            for(int j=0; j<m; j++) 
             {
-                func(n-1, j, grid);
+                if(grid[i][j]==1 && (i==0 || i==n-1 || j==0 || j==m-1)) 
+                {
+                    int id=i*m+j;
+                    int p=find(id);
+                    borderParents.insert(p);
+                }
             }
         }
 
         int count=0;
 
-        for(int i=1; i<n; i++)
+        for(int i=0; i<n; i++) 
         {
-            for(int j=1; j<m; j++)
+            for(int j=0; j<m; j++) 
             {
-                if(grid[i][j]==1)
+                if(grid[i][j]==1) 
                 {
-                    count++;
+                    int id=i*m+j;
+                    int p=find(id);
+
+                    if(borderParents.find(p)==borderParents.end())
+                    {
+                        count++;
+                    }
                 }
             }
         }
