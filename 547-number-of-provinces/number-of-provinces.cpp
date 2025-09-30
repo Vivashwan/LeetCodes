@@ -1,48 +1,66 @@
 class Solution {
 private:
-    void func(unordered_map<int, vector<int>>&mp, vector<bool>&visited, int ind)
-    {
-        visited[ind]=true;
+    vector<int>parent, rank; 
 
-        for(auto it: mp[ind])
+    int find(int x) 
+    {
+        if(parent[x]!=x) 
         {
-            if(!visited[it])
-            {
-                func(mp, visited, it);
-            }
+            parent[x]=find(parent[x]);
+        }
+
+        return parent[x];
+    }
+
+    void unite(int x, int y) 
+    {
+        int px=find(x), py=find(y);
+        if(px==py)
+        { 
+            return;
+        }
+
+        if(rank[px]<rank[py]) 
+        {
+            parent[px]=py;
+        } 
+        else if(rank[px]>rank[py]) 
+        {
+            parent[py]=px;
+        } 
+        else 
+        {
+            parent[py]=px;
+            rank[px]++;
         }
     }
+
 public:
     int findCircleNum(vector<vector<int>>& isConnected) {
-        int n=isConnected.size(), m=isConnected[0].size();
+        int n=isConnected.size();
+        parent.resize(n);
+        rank.resize(n, 0);
 
-        unordered_map<int, vector<int>>mp;
+        iota(parent.begin(), parent.end(), 0);
 
-        for(int i=0; i<n; i++)
+        for(int i=0; i<n; i++) 
         {
-            for(int j=0; j<m; j++)
+            for(int j=i+1; j<n; j++) 
             {
-                if(i!=j && isConnected[i][j]==1)
+                if(isConnected[i][j]==1) 
                 {
-                    mp[i].push_back(j);
+                    unite(i, j);
                 }
             }
         }
 
-        vector<bool>visited(n, false);
+        unordered_set<int>provinces;
 
-        int count=0;
-
-        for(int i=0; i<n; i++)
+        for(int i=0; i<n; i++) 
         {
-            if(!visited[i])
-            {
-                count++;
-
-                func(mp, visited, i);
-            }
+            provinces.insert(find(i));
         }
 
-        return count;
+        return provinces.size();
     }
 };
