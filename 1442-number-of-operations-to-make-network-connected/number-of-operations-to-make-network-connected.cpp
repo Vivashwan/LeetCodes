@@ -1,42 +1,67 @@
 class Solution {
 private:
-    void dfs(int node, vector<vector<int>>&adj, vector<bool>&visited) 
-    {
-        visited[node]=true;
+    vector<int>parent, rank;
 
-        for(int neighbor: adj[node]) 
+    int find(int x)
+    {
+        while(parent[x]!=x)
         {
-            if(!visited[neighbor]) 
-            {
-                dfs(neighbor, adj, visited);
-            }
+            parent[x]=parent[parent[x]];
+            x=parent[x];
+        }
+
+        return x;
+    }
+
+    void unite(int x, int y)
+    {
+        int px=find(x), py=find(y);
+
+        if(px==py)
+        {
+            return;
+        }
+        else if(rank[px]>rank[py])
+        {
+            parent[py]=px;
+        }
+        else if(rank[px]<rank[py])
+        {
+            parent[px]=py;
+        }
+        else
+        {
+            parent[py]=px;
+            rank[px]++;
         }
     }
 
 public:
     int makeConnected(int n, vector<vector<int>>& connections) {
-        if(connections.size()<n-1)
-        {    
+        int cables=connections.size();
+
+        if(cables<n-1)
+        {
             return -1;
         }
 
-        vector<vector<int>>adj(n);
+        parent.resize(n+1);
+        rank.resize(n+1, 0);
 
-        for(auto& conn: connections) 
+        iota(parent.begin(), parent.end(), 0);
+
+        for(auto &it: connections) 
         {
-            adj[conn[0]].push_back(conn[1]);
-            adj[conn[1]].push_back(conn[0]);
+            unite(it[0], it[1]);
         }
 
-        vector<bool>visited(n, false);
         int components=0;
 
         for(int i=0; i<n; i++) 
         {
-            if(!visited[i]) 
-            {
+            if(find(i)==i)
+            { 
                 components++;
-                dfs(i, adj, visited);
             }
         }
 
