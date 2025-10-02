@@ -1,54 +1,67 @@
 class Solution {
 private:
-    void func(int stone, unordered_map<int, vector<int>>&rowStones, unordered_map<int, vector<int>>&colStones, vector<vector<int>>&stones, vector<bool>&visited)
+    vector<int>parent, rank;
+
+    const int OFFSET=10001, SIZE=20005;
+
+    int find(int x)
     {
-        visited[stone]=true;
-
-        int row=stones[stone][0], col=stones[stone][1];
-
-        for(auto it: rowStones[row])
+        while(parent[x]!=x)
         {
-            if(!visited[it])
-            {
-                func(it, rowStones, colStones, stones, visited);
-            }
+            parent[x]=parent[parent[x]];
+            x=parent[x];
         }
 
-        for(auto it: colStones[col])
+        return x;
+    }
+
+    void unite(int x, int y)
+    {
+        int px=find(x), py=find(y);
+
+        if(px==py)
         {
-            if(!visited[it])
-            {
-                func(it, rowStones, colStones, stones, visited);
-            }
+            return;
+        }
+
+        if(rank[px]<rank[py])
+        {
+            parent[px]=py;
+        }
+        else if(rank[px]>rank[py])
+        {
+            parent[py]=px;
+        }
+        else
+        {
+            parent[py]=px;
+            rank[px]++;
         }
     }
 public:
     int removeStones(vector<vector<int>>& stones) {
         int n=stones.size();
 
-        unordered_map<int, vector<int>>rowStones, colStones;
-        
-        vector<bool>visited(n, false);
+        parent.resize(SIZE);
+        rank.resize(SIZE, 0);
 
-        for(int i=0; i<stones.size(); i++)
+        iota(parent.begin(), parent.end(), 0);
+
+        for(auto it: stones)
         {
-            int row=stones[i][0], col=stones[i][1];
-
-            rowStones[row].push_back(i);
-            colStones[col].push_back(i);
+            unite(it[0], it[1]+OFFSET);
         }
 
-        int connectedComponents=0;
+        unordered_set<int>uniqueRoots;
 
-        for(int i=0; i<n; i++)
+        for(auto it: stones)
         {
-            if(!visited[i])
-            {
-                func(i, rowStones, colStones, stones, visited);
-                connectedComponents++;
-            }
+            int row=it[0];
+            uniqueRoots.insert(find(row));
         }
 
-        return n-connectedComponents;
+        int numComponents=uniqueRoots.size(), totalStones=stones.size();
+
+        return totalStones-numComponents;
     }
 };
