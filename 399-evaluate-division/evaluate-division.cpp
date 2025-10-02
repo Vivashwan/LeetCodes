@@ -1,60 +1,73 @@
 class Solution {
 private:
-    double func(string start, string end, unordered_map<string, vector<pair<string, double>>>&mp, unordered_set<string>&visited)
+    unordered_map<string, string>parent;
+    unordered_map<string, double>weight;
+
+    string find(string x)
     {
-        if(mp.find(start)==mp.end())
+        if(parent.find(x)==parent.end())
+        {
+            parent[x]=x;
+            weight[x]=1.0;
+        }
+
+        if(parent[x]!=x)
+        {
+            string org=parent[x];
+            parent[x]=find(org);
+            weight[x]*=weight[org];
+        }
+
+        return parent[x];
+    }
+
+    void unite(string x, string y, double val)
+    {
+        string rootX=find(x), rootY=find(y);
+
+        if(rootX==rootY)
+        {
+            return;
+        }
+
+        parent[rootX]=rootY;
+
+        weight[rootX]=weight[y]*val/weight[x];
+    }
+
+    double divide(string x, string y)
+    {
+        if(parent.find(x)==parent.end() || parent.find(y)==parent.end())
         {
             return -1.0;
         }
 
-        if(start==end)
+        string rootX=find(x), rootY=find(y);
+
+        if(rootX!=rootY)
         {
-            return 1.0;
+            return -1.0;
         }
 
-        visited.insert(start);
-
-        for(auto it: mp[start])
-        { 
-            auto [nextPos, val]=it;
-
-            if(visited.count(nextPos))
-            { 
-                continue;
-            }
-
-            double result=func(nextPos, end, mp, visited);
-
-            if(result!=-1.0)
-            {
-                return result*val;
-            }
-        }
-
-        return -1.0;
+        return weight[x]/weight[y];
     }
 
 public:
     vector<double> calcEquation(vector<vector<string>>& equations, vector<double>& values, vector<vector<string>>& queries) {
-        unordered_map<string, vector<pair<string, double>>>mp;
-
         for(int i=0; i<equations.size(); i++)
         {
-            mp[equations[i][0]].push_back({equations[i][1], values[i]});
-            mp[equations[i][1]].push_back({equations[i][0], 1.0/values[i]});
+            string a=equations[i][0], b=equations[i][1];
+
+            double val=values[i];
+
+            unite(a, b, val);
         }
 
         vector<double>res;
 
         for(auto it: queries)
         {
-            string start=it[0], end=it[1];
-
-            unordered_set<string>visited;
-
-            double result=func(start, end, mp, visited);
-
-            res.push_back(result);
+            res.push_back(divide(it[0], it[1]));
         }
 
         return res;
