@@ -60,10 +60,10 @@ public:
                     edges.push_back({diff, id, nid});
                 }
 
-                if(j+1<m) 
+                if(j-1>=0) 
                 {
-                    int nid=i*m+(j+1);
-                    int diff=abs(heights[i][j] - heights[i][j+1]);
+                    int nid=i*m+(j-1);
+                    int diff=abs(heights[i][j] - heights[i][j-1]);
                     edges.push_back({diff, id, nid});
                 }
             }
