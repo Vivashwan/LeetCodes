@@ -1,49 +1,87 @@
-#include <vector>
-#include <queue>
-#include <cmath>
-#include <climits>
-using namespace std;
-
 class Solution {
+private:
+    vector<int>parent, rankv;
+
+    int find(int x) 
+    {
+        while(parent[x]!=x) 
+        {
+            parent[x]=parent[parent[x]];
+            x=parent[x];
+        }
+        return x;
+    }
+
+    void unite(int x, int y) 
+    {
+        int px=find(x), py=find(y);
+
+        if(px==py)
+        { 
+            return;
+        }
+
+        if(rankv[px]>rankv[py]) 
+        {
+            parent[py] = px;
+        } 
+        else if(rankv[px]<rankv[py]) 
+        {
+            parent[px]=py;
+        } 
+        else 
+        {
+            parent[py]=px;
+            rankv[px]++;
+        }
+    }
+
 public:
     int minimumEffortPath(vector<vector<int>>& heights) {
         int n=heights.size(), m=heights[0].size();
 
-        vector<vector<int>>dist(n, vector<int>(m, INT_MAX));
-        
-        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<>>pq;
+        parent.resize(n*m);
+        rankv.resize(n*m, 0);
 
-        dist[0][0]=0;
-        pq.push({0, {0, 0}});
+        iota(parent.begin(), parent.end(), 0);
 
-        int dirX[4]={-1, 0, 1, 0}, dirY[4]={0, 1, 0, -1};
+        vector<tuple<int, int, int>>edges;
 
-        while(!pq.empty()) 
+        for(int i=0; i<n; i++) 
         {
-            auto [effort, pos]=pq.top();
-            pq.pop();
-
-            int x=pos.first, y=pos.second;
-
-            if(x==n-1 && y==m-1)
-            { 
-                return effort;
-            }
-
-            for(int k=0; k<4; k++) 
+            for(int j=0; j<m; j++) 
             {
-                int newX=x+dirX[k], newY=y+dirY[k];
+                int id=i*m+j;
 
-                if(newX>=0 && newX<n && newY>=0 && newY<m) 
+                if(i+1<n) 
                 {
-                    int currentEffort=max(effort, abs(heights[newX][newY]-heights[x][y]));
-
-                    if(currentEffort<dist[newX][newY]) 
-                    {
-                        dist[newX][newY]=currentEffort;
-                        pq.push({currentEffort, {newX, newY}});
-                    }
+                    int nid=(i+1)*m+j;
+                    int diff=abs(heights[i][j] - heights[i+1][j]);
+                    edges.push_back({diff, id, nid});
                 }
+
+                if(j+1<m) 
+                {
+                    int nid=i*m+(j+1);
+                    int diff=abs(heights[i][j] - heights[i][j+1]);
+                    edges.push_back({diff, id, nid});
+                }
+            }
+        }
+
+        sort(edges.begin(), edges.end());
+
+        int start=0, end=n*m-1;
+
+        for(auto &it: edges) 
+        {
+            int effort=get<0>(it), u=get<1>(it), v=get<2>(it);
+
+            unite(u, v);
+
+            if(find(start)==find(end)) 
+            {
+                return effort;
             }
         }
 
