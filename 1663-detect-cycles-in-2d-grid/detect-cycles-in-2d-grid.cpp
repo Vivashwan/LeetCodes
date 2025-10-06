@@ -1,60 +1,78 @@
 class Solution {
 private:
-    bool dfs(vector<vector<char>>& grid, vector<vector<bool>>& visited, int n, int m, char ch, int parentX, int parentY, int fromX, int fromY) 
+    vector<int>parent, rank;
+
+    int find(int x)
     {
-        visited[parentX][parentY] = true;
-
-        int xPos[4] = {0, -1, 1, 0};
-        int yPos[4] = {-1, 0, 0, 1};
-
-        for(int i = 0; i < 4; i++) 
+        while(parent[x]!=x)
         {
-            int newPosX = parentX + xPos[i];
-            int newPosY = parentY + yPos[i];
-
-            if(newPosX >= 0 && newPosX < n && newPosY >= 0 && newPosY < m) 
-            {
-                if(grid[newPosX][newPosY] == ch) 
-                {
-                    if(!visited[newPosX][newPosY]) 
-                    {
-                        if(dfs(grid, visited, n, m, ch, newPosX, newPosY, parentX, parentY))
-                        {
-                            return true;
-                        }
-                    } 
-                    else if(newPosX != fromX || newPosY != fromY) 
-                    {
-                        return true;
-                    }
-                }
-            }
+            parent[x]=parent[parent[x]];
+            x=parent[x];
         }
 
-        return false;
+        return x;
+    }
+
+    void unite(int x, int y)
+    {
+        int px=find(x), py=find(y);
+
+        if(px==py)
+        {
+            return;
+        }
+        else if(rank[px]>rank[py])
+        {
+            parent[py]=px;
+        }
+        else if(rank[px]<rank[py])
+        {
+            parent[px]=py;
+        }
+        else
+        {
+            parent[py]=px;
+            rank[px]++;
+        }
     }
 
 public:
     bool containsCycle(vector<vector<char>>& grid) {
-        int n = grid.size();
-        int m = grid[0].size();
+        int n=grid.size(), m=grid[0].size();
 
-        vector<vector<bool>> visited(n, vector<bool>(m, false));
+        parent.resize(n*m);
+        rank.resize(n*m, 0);
 
-        for(int i = 0; i < n; i++) 
+        iota(parent.begin(), parent.end(), 0);
+
+        for(int i=0; i<n; i++)
         {
-            for(int j = 0; j < m; j++) 
+            for(int j=0; j<m; j++)
             {
-                if(!visited[i][j]) 
+                int id=i*m+j;
+
+                if(i+1<n && grid[i+1][j]==grid[i][j])
                 {
-                    if(dfs(grid, visited, n, m, grid[i][j], i, j, -1, -1)) 
+                    if(find(id)==find((i+1)*m+j))
                     {
                         return true;
                     }
+
+                    unite(id, (i+1)*m+j);
+                }
+
+                if(j-1>=0 && grid[i][j-1]==grid[i][j])
+                {
+                    if(find(id)==find(i*m+j-1))
+                    {
+                        return true;
+                    }
+
+                    unite(id, i*m+j-1);
                 }
             }
         }
 
         return false;
-    }
+    }   
 };
