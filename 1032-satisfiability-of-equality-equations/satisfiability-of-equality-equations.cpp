@@ -1,47 +1,73 @@
 class Solution {
 private:
-    void dfs(int a, vector<bool>&visited, unordered_map<int, vector<int>>&mp)
-    {
-        visited[a]=true;
+    unordered_map<char, char>parent;
+    unordered_map<char, int>rank;
 
-        for(auto it: mp[a])
+    char find(char x)
+    {
+        while(parent[x]!=x)
         {
-            if(!visited[it])
-            {
-                dfs(it, visited, mp);
-            }
+            parent[x]=parent[parent[x]];
+            x=parent[x];
+        }
+
+        return x;
+    }
+
+    void unite(char x, char y)
+    {
+        char px=find(x), py=find(y);
+
+        if(px==py)
+        {
+            return;
+        }
+        else if(rank[px]<rank[py])
+        {
+            parent[px]=py;
+        }
+        else if(rank[px]>rank[py])
+        {
+            parent[py]=px;
+        }
+        else
+        {
+            parent[py]=px;
+            rank[px]++;
         }
     }
 public:
     bool equationsPossible(vector<string>& equations) {
-        unordered_map<int, vector<int>>mp;
+        int n=equations.size();
 
-        for(auto it: equations)
+        for(char c='a'; c<='z'; c++) 
         {
-            if(it[1]=='=')
-            {
-                mp[it[0]-'a'].push_back(it[3]-'a');
-                mp[it[3]-'a'].push_back(it[0]-'a');
-            }
+            parent[c]=c;
+            rank[c]=0;
         }
 
-        for(auto it: equations)
+        for(int i=0; i<n; i++)
         {
-            if(it[1]=='!')
+            char start=equations[i][0], end=equations[i][3], sign=equations[i][1];
+
+            if(sign=='=')
             {
-                int a=it[0]-'a', b=it[3]-'a';
-
-                vector<bool>visited(27, false);
-
-                dfs(a, visited, mp);
-
-                if(visited[b]==true)
-                {
-                    return false;
-                }
+                unite(start, end);
             }
+            
         }
 
+        for(int i=0; i<n; i++)
+        {
+            char start=equations[i][0], end=equations[i][3], sign=equations[i][1];
+
+            if(sign=='!' && find(start)==find(end))
+            {
+                return false;
+            }
+            
+        }
+        
         return true;
     }
 };
