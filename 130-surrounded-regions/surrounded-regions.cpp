@@ -1,33 +1,63 @@
 class Solution {
-    void isSurroundedBy0s(int row, int col, vector<vector<char>>&board)
+private:
+    vector<int>parent, size;
+
+    int find(int x)
     {
-        if(row<0 || row>=board.size() || col<0 || col>=board[0].size() || board[row][col] != 'O')
+        while(parent[x]!=x)
+        {
+            parent[x]=parent[parent[x]];
+            x=parent[x];
+        }
+
+        return x;
+    }
+
+    void unite(int x, int y)
+    {
+        int px=find(x), py=find(y);
+
+        if(px==py)
         {
             return;
         }
-
-        board[row][col] = 'S';
-
-        isSurroundedBy0s(row-1, col, board);
-        isSurroundedBy0s(row+1, col, board);
-        isSurroundedBy0s(row, col+1, board);
-        isSurroundedBy0s(row, col-1, board);
+        else if(size[py]>size[px])
+        {
+            parent[px]=py;
+        }
+        else if(size[py]<size[px])
+        {
+            parent[py]=px;
+        }
+        else 
+        {
+            parent[py]=px;
+            size[px]+=size[py];
+        }
     }
 public:
     void solve(vector<vector<char>>& board) {
-        int n = board.size();
-        int m = board[0].size();
+        int n=board.size(), m=board[0].size();
+
+        parent.resize(n*m+1);
+        size.resize(n*m+1, 1);
+
+        int dummy=n*m;
+
+        iota(parent.begin(), parent.end(), 0);
 
         for(int i=0; i<n; i++)
         {
-            isSurroundedBy0s(i, 0, board);
-            isSurroundedBy0s(i, m-1, board);
-        }
-
-        for(int i=0; i<m; i++)
-        {
-            isSurroundedBy0s(0, i, board);
-            isSurroundedBy0s(n-1, i, board);
+            for(int j=0; j<m; j++)
+            {
+                if(board[i][j]=='O')
+                {
+                    if(i==0 || i==n-1 || j==m-1 || j==0)
+                    {
+                        unite(i*m+j, dummy);
+                    }
+                }
+            }
         }
 
         for(int i=0; i<n; i++)
@@ -36,11 +66,31 @@ public:
             {
                 if(board[i][j]=='O')
                 {
-                    board[i][j]='X';
+                    int id=i*m+j;
+
+                    if(i+1<n && board[i+1][j]=='O')
+                    {
+                        unite(id, (i+1)*m+j);
+                    }
+
+                    if(j-1>=0 && board[i][j-1]=='O')
+                    {
+                        unite(id, i*m+j-1);
+                    }
                 }
-                else if(board[i][j]=='S')
+            }
+        }
+
+        for(int i=0; i<n; i++)
+        {
+            for(int j=0; j<m; j++)
+            {
+                if(board[i][j]=='O')
                 {
-                    board[i][j]='O';
+                    if(find(i*m+j)!=find(dummy))
+                    {
+                        board[i][j]='X';
+                    }
                 }
             }
         }
