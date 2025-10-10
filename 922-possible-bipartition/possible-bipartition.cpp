@@ -1,44 +1,58 @@
 class Solution {
-public:
-    bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
-        unordered_map<int, vector<int>>mp;
+private:
+    vector<int>parent, size;
 
-        for(auto it: dislikes) 
+    int find(int x)
+    {
+        while(parent[x]!=x)
         {
-            mp[it[0]].push_back(it[1]);
-            mp[it[1]].push_back(it[0]); 
+            parent[x]=parent[parent[x]];
+            x=parent[x];
         }
 
-        vector<int>color(n+1, -1);
+        return x;
+    }
 
-        for(int i=1; i<=n; i++) 
-        {  
-            if(color[i]==-1) 
+    void unite(int x, int y)
+    {
+        int px=find(x), py=find(y);
+
+        if(px==py)
+        {
+            return;
+        }
+        else if(size[px]<size[py])
+        {
+            parent[px]=py;
+        }
+        else if(size[px]>size[py])
+        {
+            parent[py]=px;
+        }
+        else
+        {
+            parent[py]=px;
+            size[px]++;
+        }
+    }
+public:
+    bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+        parent.resize(n*2+1);
+        size.resize(n*2+1, 1);
+
+        iota(parent.begin(), parent.end(), 0);
+
+        for(auto it: dislikes)
+        {
+            int a=it[0], b=it[1];
+
+            if(find(a)==find(b))
             {
-                queue<int>q;
-                q.push(i);
-
-                color[i]=0;
-
-                while(!q.empty()) 
-                {
-                    int node=q.front();
-                    q.pop();
-
-                    for(auto neighbor: mp[node]) 
-                    {
-                        if(color[neighbor]==-1)
-                        {
-                            color[neighbor]=1-color[node];
-                            q.push(neighbor);
-                        } 
-                        else if(color[neighbor]==color[node]) 
-                        {
-                            return false;
-                        }
-                    }
-                }
+                return false;
             }
+
+            unite(a, b+n);
+            unite(a+n, b);
         }
 
         return true;
