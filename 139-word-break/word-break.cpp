@@ -1,42 +1,105 @@
+struct Node {
+    Node* links[26]={nullptr};
+    bool isLeaf=false;
+
+    bool hasKey(char ch) 
+    { 
+        return links[ch-'a']!=nullptr; 
+    }
+
+    Node* getKey(char ch) 
+    { 
+        return links[ch-'a']; 
+    }
+
+    void putKey(char ch, Node* node) 
+    { 
+        links[ch-'a']=node;
+    }
+
+    void setEnd() 
+    { 
+        isLeaf=true;
+    }
+
+    bool isEnd() 
+    { 
+        return isLeaf;
+    }
+};
+
+class Trie {
+public:
+    Node* root;
+
+    Trie() 
+    { 
+        root=new Node(); 
+    }
+
+    void insert(string& word) 
+    {
+        Node* node=root;
+
+        for(char ch: word) 
+        {
+            if(!node->hasKey(ch)) 
+            {
+                node->putKey(ch, new Node());
+            }
+            node=node->getKey(ch);
+        }
+
+        node->setEnd();
+    }
+};
+
 class Solution {
 private:
-    bool func(string s, int n, int ind, unordered_set<string>&mp, vector<int>&dp)
+    bool dfs(string& s, int start, Trie& trie, unordered_map<int, bool>& memo)
     {
-        if(ind==n)
-        {
+        if(start==s.size())
+        { 
             return true;
         }
 
-        if(dp[ind]!=-1)
-        {
-            return dp[ind];
+        if(memo.count(start))
+        { 
+            return memo[start];
         }
 
-        if(mp.find(s.substr(ind, n-ind))!=mp.end())
-        {
-            return true;
-        }
+        Node* node=trie.root;
 
-        for(int len=1; len<=n; len++)
+        for(int i=start; i<s.size(); i++) 
         {
-            string temp=s.substr(ind, len);
+            char ch=s[i];
+            if(!node->hasKey(ch))
+            { 
+                break;
+            }
 
-            if(mp.find(temp)!=mp.end() && func(s, n, ind+len, mp, dp))
+            node=node->getKey(ch);
+
+            if(node->isEnd() && dfs(s, i+1, trie, memo)) 
             {
-                return true;
+                return memo[start]=true;
             }
         }
 
-        return dp[ind] = false;
+        return memo[start]=false;
     }
+
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
-        int n = s.length();
+        Trie trie;
 
-        unordered_set<string>mp(wordDict.begin(), wordDict.end());
+        for(string& word: wordDict)
+        {    
+            trie.insert(word);
+        }
 
-        vector<int>dp(301, -1);
+        unordered_map<int, bool>memo;
 
-        return func(s, n, 0, mp, dp);
+        return dfs(s, 0, trie, memo);
     }
 };
