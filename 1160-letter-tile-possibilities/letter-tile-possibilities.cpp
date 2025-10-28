@@ -1,26 +1,24 @@
 class Solution {
 private:
-    int dfs(unordered_map<char, int>&mp)
+    int count=0;
+    
+    void func(unordered_map<char, int>&mp)
     {
-        int total=0;
-
-        for(auto& [ch, count]: mp)
+        for(auto it: mp)
         {
-            if(count==0)
+            if(it.second==0) 
             {
                 continue;
             }
 
-            total++;
+            mp[it.first]--;
 
-            mp[ch]--;
+            count++;
 
-            total+=dfs(mp);
+            func(mp);
 
-            mp[ch]++;
+            mp[it.first]++;
         }
-
-        return total;
     }
 public:
     int numTilePossibilities(string tiles) {
@@ -31,6 +29,8 @@ public:
             mp[it]++;
         }
 
-        return dfs(mp);
+        func(mp);
+
+        return count;
     }
 };
