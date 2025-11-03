@@ -1,28 +1,35 @@
 class Solution {
 private:
-    void func(int i, int j, string temp, int n, vector<string>&res)
+    vector<string>res;
+
+    void func(string str, int countOpen, int countClose, int n)
     {
-        if(i==n && j==n)
+        if(countOpen==0 && countClose==0)
         {
-            res.push_back(temp);
-            return;
+            res.push_back(str);
         }
 
-        if(i<n)
+        if(countOpen>0)
         {
-            func(i+1, j, temp+'(', n, res);
+            countOpen--;
+            func(str+'(', countOpen, countClose, n);
+            countOpen++;
         }
 
-        if(i>j)
+        if(countClose>countOpen)
         {
-            func(i, j+1, temp+')', n, res);
+            countClose--;
+            func(str+')', countOpen, countClose, n);
+            countClose++;
         }
     }
 public:
     vector<string> generateParenthesis(int n) {
-        vector<string>res;
+        int countOpen=n, countClose=n;
 
-        func(0, 0, "", n, res);
+        string str="";
+
+        func(str, countOpen, countClose, n);
 
         return res;
     }
