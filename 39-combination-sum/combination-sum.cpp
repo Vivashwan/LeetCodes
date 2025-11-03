@@ -1,32 +1,35 @@
 class Solution {
-public:
-    void recursive(vector<vector<int>>&res, int target, int curr, int ind, vector<int>&temp, vector<int>&candidates)
+private:
+    vector<vector<int>>res;
+
+    void func(vector<int>temp, vector<int>&candidates, int ind, int target, int sum, int n)
     {
-        if(curr>target || ind==candidates.size())
-        { 
-            return;
-        }
-
-        if(curr==target)
+        if(ind==n)
         {
-            res.push_back(temp);
+            if(sum==target)
+            {
+                res.push_back(temp);
+            }
             return;
         }
 
-        recursive(res, target, curr, ind+1, temp, candidates);
+        if(sum>target)
+        {
+            return;
+        }
 
         temp.push_back(candidates[ind]);
-
-        recursive(res, target, curr+candidates[ind], ind, temp, candidates);
-
+        func(temp, candidates, ind, target, sum+candidates[ind], n);
         temp.pop_back();
-    }
 
+        func(temp, candidates, ind+1, target, sum, n);
+    }
+public:
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        vector<vector<int>>res;
+        int n=candidates.size();
         vector<int>temp;
 
-        recursive(res, target, 0, 0, temp, candidates);
+        func(temp, candidates, 0, target, 0, n);
 
         return res;
     }
