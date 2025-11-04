@@ -1,31 +1,35 @@
 class Solution {
 private:
-    void func(int ind, string& s, int n, vector<string>&res)
+    vector<string>res;
+
+    void func(string s, int i, int n)
     {
-        if(ind==n)
+        if(i==n)
         {
             res.push_back(s);
             return;
         }
 
-        func(ind+1, s, n, res);
+        func(s, i+1, n);
 
-        if(isalpha(s[ind]))
+        if(s[i]>='a' && s[i]<='z')
         {
-            s[ind]^=32;
-
-            func(ind+1, s, n, res);
-
-            s[ind]^=32;
+            s[i]=s[i]-32;
+            func(s, i+1, n);
         }
+        else if(s[i]>='A' && s[i]<='Z')
+        {
+            s[i]=s[i]+32;
+            func(s, i+1, n);
+        }
+
+        
     }
 public:
     vector<string> letterCasePermutation(string s) {
         int n=s.length();
 
-        vector<string>res;
-
-        func(0, s, n, res);
+        func(s, 0, n);
 
         return res;
     }
