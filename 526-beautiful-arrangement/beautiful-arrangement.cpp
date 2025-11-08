@@ -24,7 +24,7 @@ private:
     }
 public:
     int countArrangement(int n) {
-        vector<bool>visited(n, false);
+        vector<bool>visited(n+1, false);
 
         int ans=0;
 
