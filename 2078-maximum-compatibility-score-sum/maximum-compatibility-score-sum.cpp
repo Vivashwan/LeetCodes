@@ -1,56 +1,62 @@
 class Solution {
-public:
-    int m, n;
-    vector<vector<int>>score;
-    int ans=0;
+private:
+    int maxim=INT_MIN;
 
-    void backtrack(int studentIdx, vector<bool>& used, int currSum)
+    int checkSimilar(vector<int>&a, vector<int>&b)
     {
-        if(studentIdx==n)
+        int count=0; 
+        for(int i=0; i<a.size(); i++) 
+        { 
+            if(a[i]==b[i]) 
+            { 
+                count++; 
+            }
+        } 
+        
+        return count;
+    }
+
+    void func(vector<vector<int>>& students, vector<vector<int>>& mentors, vector<int>usedS, vector<int>usedM, int count, int n)
+    {
+        int i=-1;
+
+        for(int x=0; x<n; x++)
         {
-            ans=max(ans, currSum);
+            if(usedS[x]==0)
+            {
+                i=x;
+                break;
+            }
+        }
+
+        if(i==-1)
+        {
+            maxim=max(maxim, count);
             return;
         }
 
-        for(int mentor=0; mentor<n; mentor++)
+        for(int j=0; j<n; j++)
         {
-            if(!used[mentor])
+            if(usedM[j]==0)
             {
-                used[mentor]=true;
-                backtrack(studentIdx+1, used, currSum+score[studentIdx][mentor]);
-                used[mentor]=false;
+                count+=checkSimilar(students[i], mentors[j]);
+                usedM[j]++;
+                usedS[i]++;
+                func(students, mentors, usedS, usedM, count, n);
+                usedS[i]--;
+                usedM[j]--;
+                count-=checkSimilar(students[i], mentors[j]);
             }
         }
     }
-
+public:
     int maxCompatibilitySum(vector<vector<int>>& students, vector<vector<int>>& mentors) {
-        n=students.size();
-        m=students[0].size();
+        int n=students.size();
 
-        score.assign(n, vector<int>(n, 0));
+        vector<int>usedS(n, 0), usedM(n, 0);
 
-        for(int i=0; i<n; i++)
-        {
-            for(int j=0; j<n; j++)
-            {
-                int cnt=0;
+        func(students, mentors, usedS, usedM, 0, n);
 
-                for(int k=0; k<m; k++)
-                {
-                    if(students[i][k]==mentors[j][k])
-                    { 
-                        cnt++;
-                    }
-                }
-
-                score[i][j]=cnt;
-            }
-        }
-
-        vector<bool>used(n, false);
-
-        backtrack(0, used, 0);
-
-        return ans;
+        return maxim;
     }
 };
