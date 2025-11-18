@@ -1,30 +1,34 @@
 class Solution {
 private:
-    void findSubsets(int index, vector<int>&temp, vector<vector<int>>&res, vector<int>&nums)
+    vector<vector<int>>res;
+
+    void func(vector<int>&nums, int n, int ind, vector<int>temp)
     {
         res.push_back(temp);
-        for(int i=index; i<nums.size(); i++)
-        {
-            if(i!=index && nums[i]==nums[i-1])
-            {
-                continue;
-            }
 
-            temp.push_back(nums[i]);
-            findSubsets(i+1, temp, res, nums);
-            temp.pop_back();
+        unordered_set<int>s;
+
+        for(int i=ind; i<n; i++)
+        {
+            if(s.find(nums[i])==s.end())
+            {
+                s.insert(nums[i]);
+                temp.push_back(nums[i]);
+                func(nums, n, i+1, temp);
+                temp.pop_back();
+            }
         }
     }
 public:
     vector<vector<int>> subsetsWithDup(vector<int>& nums) {
-        vector<vector<int>>res;
-
-        vector<int>temp;
+        int n=nums.size();
 
         sort(nums.begin(), nums.end());
 
-        findSubsets(0, temp, res, nums);
-        
+        vector<int>temp;
+
+        func(nums, n, 0, temp);
+
         return res;
     }
 };
