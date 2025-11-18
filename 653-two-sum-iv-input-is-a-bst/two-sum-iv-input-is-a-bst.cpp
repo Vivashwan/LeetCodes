@@ -11,26 +11,26 @@
  */
 class Solution {
 private:
-    bool dfs(TreeNode* root, int k, unordered_set<int>&seen)
+    bool func(TreeNode* root, int k, unordered_map<int, int>&mp)
     {
         if(!root)
         {
             return false;
         }
 
-        if(seen.count(k-root->val))
+        if(mp.find(k-root->val)!=mp.end())
         {
             return true;
         }
 
-        seen.insert(root->val);
+        mp[root->val]++;
 
-        return dfs(root->left, k, seen) || dfs(root->right, k, seen);
+        return func(root->left, k, mp) || func(root->right, k, mp);
     }
 public:
     bool findTarget(TreeNode* root, int k) {
-        unordered_set<int>seen;
+        unordered_map<int, int>mp;
 
-        return dfs(root, k, seen);
+        return func(root, k, mp);
     }
 };
