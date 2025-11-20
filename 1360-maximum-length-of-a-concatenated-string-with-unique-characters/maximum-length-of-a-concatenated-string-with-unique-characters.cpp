@@ -1,50 +1,42 @@
 class Solution {
 private:
-    int dfs(vector<int>& masks, int index, int currMask) 
+    int maxim=INT_MIN;
+
+    void func(vector<string>&arr, int n, unordered_set<char>s, int ind, string str)
     {
-        if(index==masks.size()) 
-        {    
-            return __builtin_popcount(currMask);
-        }
-        
-        int res=dfs(masks, index+1, currMask);
-        
-        if((currMask & masks[index])==0) 
+        if(ind==n)
         {
-            res=max(res, dfs(masks, index+1, currMask | masks[index]));
+            int size=str.length();
+            maxim=max(maxim, size);
+            return;
         }
-        
-        return res;
+
+        func(arr, n, s, ind+1, str);
+
+        for(auto it: arr[ind])
+        {
+            if(s.find(it)!=s.end())
+            {
+                return;
+            }
+
+            s.insert(it);
+        }
+
+        str+=arr[ind];
+
+        func(arr, n, s, ind+1, str);
     }
-    
 public:
     int maxLength(vector<string>& arr) {
-        vector<int>masks;
+        int n=arr.size();
 
-        for(auto &s: arr) 
-        {
-            int mask=0;
-            bool valid=true;
+        unordered_set<char>s;
 
-            for(char c: s) 
-            {
-                int bit=c-'a';
+        string str="";
 
-                if(mask & (1<<bit)) 
-                {
-                    valid=false;
-                    break;
-                }
+        func(arr, n, s, 0, str);
 
-                mask |= (1<<bit);
-            }
-
-            if(valid)
-            { 
-                masks.push_back(mask);
-            }
-        }
-        
-        return dfs(masks, 0, 0);
+        return maxim;
     }
 };
