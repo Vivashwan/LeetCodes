@@ -40,7 +40,7 @@ public:
                 q.push(it->right);
             }
         }
-        
+
         return str;
     }
 
@@ -55,10 +55,11 @@ public:
         stringstream ss(data);
         getline(ss, s, ',');
 
-        TreeNode* node=new TreeNode(stoi(s));
         queue<TreeNode*>q;
 
-        q.push(node);
+        TreeNode* root=new TreeNode(stoi(s));
+
+        q.push(root);
 
         while(!q.empty())
         {
@@ -73,9 +74,10 @@ public:
             }
             else
             {
-                TreeNode* nodeLeft=new TreeNode(stoi(s));
-                it->left=nodeLeft;
-                q.push(nodeLeft);
+                TreeNode* newNode=new TreeNode(stoi(s));
+                it->left=newNode;
+
+                q.push(newNode);
             }
 
             getline(ss, s, ',');
@@ -86,13 +88,14 @@ public:
             }
             else
             {
-                TreeNode* nodeRight=new TreeNode(stoi(s));
-                it->right=nodeRight;
-                q.push(nodeRight);
+                TreeNode* newNode=new TreeNode(stoi(s));
+                it->right=newNode;
+
+                q.push(newNode);
             }
         }
 
-        return node;
+        return root;
     }
 };
 
