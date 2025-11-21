@@ -9,14 +9,13 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
-
 class Solution {
 private:
-    vector<TreeNode*>buildTrees(int start, int end) 
+    vector<TreeNode*>func(int start, int end)
     {
         vector<TreeNode*>allTrees;
 
-        if(start>end) 
+        if(start>end)
         {
             allTrees.push_back(nullptr);
             return allTrees;
@@ -24,17 +23,18 @@ private:
 
         for(int i=start; i<=end; i++)
         {
-            vector<TreeNode*>leftTrees = buildTrees(start, i-1);
-            vector<TreeNode*>rightTrees = buildTrees(i+1, end);
+            vector<TreeNode*>leftChild=func(start, i-1);
+            vector<TreeNode*>rightChild=func(i+1, end);
 
-            for(auto left: leftTrees) 
+            for(auto it1: leftChild)
             {
-                for(auto right: rightTrees) 
+                for(auto it2: rightChild)
                 {
-                    TreeNode* current = new TreeNode(i);
-                    current->left=left;
-                    current->right=right;
-                    allTrees.push_back(current);
+                    TreeNode* root=new TreeNode(i);
+                    root->left=it1;
+                    root->right=it2;
+
+                    allTrees.push_back(root);
                 }
             }
         }
@@ -44,10 +44,11 @@ private:
 public:
     vector<TreeNode*> generateTrees(int n) {
         if(n==0)
-        { 
-            return {};
+        {
+            return {nullptr};
         }
-        
-        return buildTrees(1, n);
+
+        return func(1, n);
+
     }
 };
