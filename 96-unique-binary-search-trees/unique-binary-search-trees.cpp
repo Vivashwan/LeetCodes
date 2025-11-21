@@ -1,6 +1,11 @@
-vector<int>dp(20, -1);
 class Solution {
 public:
+    vector<int>dp;
+
+    Solution(){
+        dp.resize(20, -1);
+    }
+    
     int numTrees(int n) {
         if(n<=1)
         {
