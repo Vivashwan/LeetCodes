@@ -13,7 +13,7 @@ class Solution {
 private:
     int count=0;
 
-    vector<int>func(TreeNode* root, int distance)
+    vector<int> func(TreeNode* root, int distance)
     {
         if(!root)
         {
@@ -32,37 +32,33 @@ private:
         {
             for(auto v: right)
             {
-                if(u>0 && v>0)
+                if(u>0 && v>0 && u+v<=distance)
                 {
-                    if(u+v<=distance)
-                    {
-                        count++;
-                    }  
+                    count++;
                 }
             }
-        } 
+        }
 
-        vector<int>res;  
+        vector<int>res;
 
         for(auto it: left)
         {
-            if(it>0 && it<distance)
+            if(it>0 && it<=distance)
             {
                 res.push_back(it+1);
-            } 
+            }
         }
 
         for(auto it: right)
         {
-            if(it>0 && it<distance)
+            if(it>0 && it<=distance)
             {
                 res.push_back(it+1);
             }
-        }  
+        }
 
-        return res;   
+        return res;
     }
-
 public:
     int countPairs(TreeNode* root, int distance) {
         func(root, distance);
