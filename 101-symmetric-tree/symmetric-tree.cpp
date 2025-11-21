@@ -10,24 +10,28 @@
  * };
  */
 class Solution {
-    private:
-    bool isMirrorOrNot(TreeNode *head1, TreeNode *head2)
+private:
+    bool func(TreeNode* root1, TreeNode* root2)
     {
-        if(head1 == nullptr && head2 == nullptr)
+        if(root1==nullptr && root2==nullptr)
         {
             return true;
         }
-        if(head1 == nullptr || head2 == nullptr)
+
+        if(root1==nullptr || root2==nullptr)
         {
             return false;
         }
 
-        return ((head1->val==head2->val) && isMirrorOrNot(head1->left, head2->right) && isMirrorOrNot(head1->right, head2->left));
+        return (root1->val == root2->val) && func(root1->left, root2->right) && func(root1->right, root2->left);
     }
 public:
     bool isSymmetric(TreeNode* root) {
-        if(root==nullptr)return true;
-        
-        return isMirrorOrNot(root->left, root->right);
+        if(!root)
+        {
+            return true;
+        }
+
+        return func(root, root);
     }
 };
