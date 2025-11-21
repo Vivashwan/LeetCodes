@@ -10,56 +10,54 @@
  * };
  */
 class Solution {
+private:
+    TreeNode* parentX=nullptr, *parentY=nullptr;
+    int depthX=0, depthY=0;
+
+    void func(TreeNode* root, TreeNode* parent, int x, int y, int depth)
+    {
+        if(!root)
+        {
+            return;
+        }
+
+        if(root->val==x)
+        {
+            parentX=parent;
+            depthX=depth;
+        }
+
+        if(root->val==y)
+        {
+            parentY=parent;
+            depthY=depth;
+        }
+
+        func(root->left, root, x, y, depth+1);
+        func(root->right, root, x, y, depth+1);
+    }
 public:
     bool isCousins(TreeNode* root, int x, int y) {
         if(!root)
-        { 
+        {
             return false;
         }
 
-        queue<pair<TreeNode*, TreeNode*>>q;
+        func(root, nullptr, x, y, 0);
 
-        q.push({root, nullptr});
-
-        while(!q.empty()) 
+        if(parentX && parentY)
         {
-            int size=q.size();
-            TreeNode* x_parent=nullptr, *y_parent=nullptr;
-
-            for(int i=0; i<size; i++) 
+            if(parentX->val==parentY->val)
             {
-                auto [node, parent]=q.front();
-                q.pop();
-
-                if(node->val==x)
-                { 
-                    x_parent=parent;
-                }
-
-                if(node->val==y)
-                { 
-                    y_parent=parent;
-                }
-
-                if(node->left)
-                {    
-                    q.push({node->left, node});
-                }
-
-                if(node->right)
-                {    
-                    q.push({node->right, node});
-                }
-            }
-
-            if(x_parent && y_parent)
-            {    
-                return x_parent!=y_parent;
-            }
-
-            if(x_parent || y_parent)
-            {    
                 return false;
+            }
+            else if(depthX!=depthY)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 
