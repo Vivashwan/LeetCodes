@@ -18,17 +18,22 @@ private:
             return true;
         }
 
-        if(p==nullptr || q==nullptr)
+        if(!p || !q)
         {
             return false;
         }
 
-
-        return (p->val==q->val && func(p->left, q->left) && func(p->right, q->right));
+        return (p->val == q->val) && func(p->left, q->left) && func(p->right, q->right);
     }
-
 public:
     bool isSameTree(TreeNode* p, TreeNode* q) {
+
+
+        // if(!p || !q)
+        // {
+        //     return false;
+        // }
+
         return func(p, q);
     }
 };
