@@ -12,12 +12,12 @@ public:
 
     // Encodes a tree to a single string.
     string serialize(TreeNode* root) {
-        string str="";
-
         if(!root)
         {
-            return str;
+            return "";
         }
+
+        string str="";
 
         queue<TreeNode*>q;
 
@@ -25,22 +25,22 @@ public:
 
         while(!q.empty())
         {
-            auto it = q.front();
+            auto it=q.front();
             q.pop();
 
-            if(!it)
+            if(it==nullptr)
             {
                 str+="#,";
             }
             else
             {
-                str+=to_string(it->val)+',';
+                str+=to_string(it->val)+",";
 
                 q.push(it->left);
                 q.push(it->right);
             }
         }
-
+        
         return str;
     }
 
@@ -51,53 +51,48 @@ public:
             return nullptr;
         }
 
-        string str="";
-        stringstream x(data);
-        getline(x, str, ',');
+        string s="";
+        stringstream ss(data);
+        getline(ss, s, ',');
 
-        TreeNode* root = new TreeNode(stoi(str));
-
+        TreeNode* node=new TreeNode(stoi(s));
         queue<TreeNode*>q;
 
-        q.push(root);
+        q.push(node);
 
         while(!q.empty())
         {
-            auto it = q.front();
+            auto it=q.front();
             q.pop();
 
-            getline(x, str, ',');
+            getline(ss, s, ',');
 
-            if(str=="#")
+            if(s=="#")
             {
                 it->left=nullptr;
             }
             else
             {
-                TreeNode* nextLeft = new TreeNode(stoi(str));
-
-                it->left = nextLeft;
-
-                q.push(nextLeft);
+                TreeNode* nodeLeft=new TreeNode(stoi(s));
+                it->left=nodeLeft;
+                q.push(nodeLeft);
             }
 
-            getline(x, str, ',');
+            getline(ss, s, ',');
 
-            if(str=="#")
+            if(s=="#")
             {
                 it->right=nullptr;
             }
             else
             {
-                TreeNode* nextRight = new TreeNode(stoi(str));
-
-                it->right = nextRight;
-
-                q.push(nextRight);
+                TreeNode* nodeRight=new TreeNode(stoi(s));
+                it->right=nodeRight;
+                q.push(nodeRight);
             }
-        }   
+        }
 
-        return root;  
+        return node;
     }
 };
 
