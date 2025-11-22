@@ -11,45 +11,45 @@
  */
 class Solution {
 private:
-    TreeNode* dfs(TreeNode* node, unordered_set<int>&s, vector<TreeNode*>&res)
+    TreeNode* func(TreeNode* root, unordered_set<int>&s, vector<TreeNode*>&res)
     {
-        if(!node)
-        { 
-            return nullptr;
-        }
-
-        node->left=dfs(node->left, s, res), node->right=dfs(node->right, s, res);
-
-        if(s.count(node->val)) 
+        if(!root)
         {
-            if(node->left)
-            { 
-                res.push_back(node->left);
+            return nullptr;
+        }
+
+        root->left=func(root->left, s, res);
+        root->right=func(root->right, s, res);
+
+        if(s.count(root->val))
+        {
+            if(root->left)
+            {
+                res.push_back(root->left);
             }
 
-            if(node->right)
-            { 
-                res.push_back(node->right);
+            if(root->right)
+            {
+                res.push_back(root->right);
             }
 
             return nullptr;
         }
 
-        return node;
+        return root;
     }
-
 public:
     vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
         unordered_set<int>s(to_delete.begin(), to_delete.end());
 
         vector<TreeNode*>res;
 
-        if(!s.count(root->val)) 
+        if(!s.count(root->val))
         {
             res.push_back(root);
         }
 
-        dfs(root, s, res);
+        func(root, s, res);
 
         return res;
     }
