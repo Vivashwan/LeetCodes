@@ -11,31 +11,38 @@
  */
 class Solution {
 private:
-    int dfs(TreeNode* node, long long currSum, int target, unordered_map<long long, int>& prefixSumCount) 
+    int func(TreeNode* root, int targetSum, long long currSum, unordered_map<long long, int>&mp)
     {
-        if(!node)
-        { 
+        if(!root)
+        {
             return 0;
         }
 
-        currSum+=node->val;
-        int count=prefixSumCount[currSum-target];
+        currSum+=root->val;
+        long long need=currSum-targetSum;
 
-        prefixSumCount[currSum]++;
+        int count=0;
 
-        count+=dfs(node->left, currSum, target, prefixSumCount);
-        count+=dfs(node->right, currSum, target, prefixSumCount);
+        if(mp.count(need)) 
+        {
+            count+=mp[need];
+        }
 
-        prefixSumCount[currSum]--;
+        mp[currSum]++;
+
+        count+=func(root->left, targetSum, currSum, mp);
+        count+=func(root->right, targetSum, currSum, mp);
+
+        mp[currSum]--;
 
         return count;
     }
-
 public:
-    int pathSum(TreeNode* root, int targetSum)
-    {
-        unordered_map<long long, int>prefixSumCount;
-        prefixSumCount[0]=1;
-        return dfs(root, 0, targetSum, prefixSumCount);
+    int pathSum(TreeNode* root, int targetSum) {
+        unordered_map<long long, int>mp;
+
+        mp[0]=1;
+
+        return func(root, targetSum, 0, mp);
     }
 };
