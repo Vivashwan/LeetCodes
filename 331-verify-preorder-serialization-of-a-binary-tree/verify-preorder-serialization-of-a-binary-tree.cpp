@@ -1,7 +1,7 @@
 class Solution {
 public:
     bool isValidSerialization(string preorder) {
-        if(preorder.empty()) 
+        if(preorder.empty())
         {
             return false;
         }
