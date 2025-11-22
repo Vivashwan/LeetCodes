@@ -10,19 +10,32 @@
  * };
  */
 class Solution {
-public:
-    void inorder(TreeNode*& ans, TreeNode* root) {
-        if (!root) return;
-        inorder(ans, root->left);
-        ans->right = new TreeNode(root->val);
-        ans = ans->right;
-        inorder(ans, root->right);
+private:
+    void func(TreeNode* root, TreeNode*& ans)
+    {
+        if(!root)
+        {
+            return;
+        }
+
+        func(root->left, ans);
+
+        ans->right=new TreeNode(root->val);
+
+        ans=ans->right;
+
+        func(root->right, ans);
     }
+public:
     TreeNode* increasingBST(TreeNode* root) {
         TreeNode* temp;
-        TreeNode* ans = new TreeNode();
-        temp = ans;
-        inorder(ans, root);
+
+        TreeNode* ans=new TreeNode();
+
+        temp=ans;
+
+        func(root, ans);
+
         return temp->right;
     }
 };
