@@ -9,7 +9,7 @@
  */
 class Solution {
 private:
-    void findParent(TreeNode* root, unordered_map<int, TreeNode*>&parentOf)
+    void findParent(TreeNode* root, unordered_map<int, TreeNode*>&mp)
     {
         if(!root)
         {
@@ -18,18 +18,18 @@ private:
 
         if(root->left)
         {
-            parentOf[root->left->val]=root;
-            findParent(root->left, parentOf);
+            mp[root->left->val]=root;
+            findParent(root->left, mp);
         }
 
         if(root->right)
         {
-            parentOf[root->right->val]=root;
-            findParent(root->right, parentOf);
+            mp[root->right->val]=root;
+            findParent(root->right, mp);
         }
     }
 
-    void dfs(TreeNode* root, int k, unordered_map<int, TreeNode*>&parentOf, unordered_set<TreeNode*>&visited, vector<int>&res)
+    void func(TreeNode* root, int k, unordered_map<int, TreeNode*>&mp, vector<int>&res, unordered_set<TreeNode*>&visited)
     {
         if(!root || visited.find(root)!=visited.end())
         {
@@ -44,26 +44,21 @@ private:
             return;
         }
 
-        dfs(root->left, k-1, parentOf, visited, res);
-        dfs(root->right, k-1, parentOf, visited, res);
-        dfs(parentOf[root->val], k-1, parentOf, visited, res);
+        func(root->left, k-1, mp, res, visited);
+        func(root->right, k-1, mp, res, visited);
+        func(mp[root->val], k-1, mp, res, visited);
     }
 public:
     vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
-        if(!root)
-        {
-            return {};
-        }
+        unordered_map<int, TreeNode*>mp;
 
-        unordered_map<int, TreeNode*>parentOf;
-        
-        findParent(root, parentOf);
+        findParent(root, mp);
 
-        vector<int>res; 
+        vector<int>res;
 
         unordered_set<TreeNode*>visited;
 
-        dfs(target, k, parentOf, visited, res);
+        func(target, k, mp, res, visited);
 
         return res;
     }
