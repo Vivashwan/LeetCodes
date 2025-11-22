@@ -11,13 +11,12 @@
  */
 class Solution {
 private:
-    unordered_map<int, vector<TreeNode*>>memo;
-    
+    unordered_map<int, vector<TreeNode*>>mp;
 public:
     vector<TreeNode*> allPossibleFBT(int n) {
-        if(memo.count(n))
+        if(mp.count(n))
         {
-            return memo[n];
+            return mp[n];
         }
 
         vector<TreeNode*>res;
@@ -35,18 +34,19 @@ public:
             vector<TreeNode*>leftNode=allPossibleFBT(left);
             vector<TreeNode*>rightNode=allPossibleFBT(right);
 
-            for(auto l: leftNode)
+            for(auto u: leftNode)
             {
-                for(auto r: rightNode)
+                for(auto v: rightNode)
                 {
-                    TreeNode* root = new TreeNode(0);
-                    root->left=l;
-                    root->right=r;
+                    TreeNode* root=new TreeNode(0);
+                    root->left=u;
+                    root->right=v;
+
                     res.push_back(root);
                 }
             }
         }
 
-        return memo[n]=res;
-    }   
+        return mp[n]= res;
+    }
 };
