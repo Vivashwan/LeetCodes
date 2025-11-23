@@ -11,7 +11,10 @@ public:
             {
                 left=mid+1;
             }
-            else right=mid;
+            else
+            {
+                right=mid;
+            }
         }
 
         return vector<int>(arr.begin()+left, arr.begin()+left+k);
