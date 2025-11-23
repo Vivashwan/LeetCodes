@@ -13,24 +13,27 @@ public:
 
             for(int i=0; i<n; i++)
             {
-                if(mat[i][mid]>mat[maxRow][mid])
+                if(mat[maxRow][mid]<mat[i][mid])
                 {
                     maxRow=i;
                 }
             }
 
-            int leftNeighbor=mid-1>=0 ? mat[maxRow][mid-1]:-1;
-            int rightNeighbor=mid+1<m ? mat[maxRow][mid+1]:-1;
+            int leftNeighbor=(mid-1>=0) ? mat[maxRow][mid-1]:-1;
+            int rightNeighbor=(mid+1<m) ? mat[maxRow][mid+1]:-1;
 
-            if(mat[maxRow][mid]>leftNeighbor && mat[maxRow][mid]>rightNeighbor)
+            if(leftNeighbor<mat[maxRow][mid] && rightNeighbor<mat[maxRow][mid])
             {
                 return {maxRow, mid};
             }
-            else if(mat[maxRow][mid]<leftNeighbor)
+            else if(leftNeighbor>mat[maxRow][mid])
             {
                 right=mid-1;
             }
-            else left=mid+1;
+            else
+            {
+                left=mid+1;
+            }
         }
 
         return {-1, -1};
