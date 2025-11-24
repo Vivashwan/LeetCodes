@@ -3,16 +3,15 @@ public:
     vector<int> nextGreaterElements(vector<int>& nums) {
         int n=nums.size();
 
-        vector<int>res(n, -1);
-
         stack<int>st;
+
+        vector<int>res(n, -1);
 
         for(int i=0; i<2*n; i++)
         {
             while(!st.empty() && nums[i%n]>nums[st.top()%n])
             {
-                int ind=st.top()%n;
-                res[ind]=nums[i%n];
+                res[st.top()%n]=nums[i%n];
                 st.pop();
             }
 
