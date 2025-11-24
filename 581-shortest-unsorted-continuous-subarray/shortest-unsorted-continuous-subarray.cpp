@@ -14,6 +14,7 @@ public:
                 left=min(left, st.top());
                 st.pop();
             }
+
             st.push(i);
         }
 
@@ -33,6 +34,6 @@ public:
             st.push(i);
         }
 
-        return right>left ? right-left+1:0;
+        return right>left ? right-left+1 : 0;
     }
 };
