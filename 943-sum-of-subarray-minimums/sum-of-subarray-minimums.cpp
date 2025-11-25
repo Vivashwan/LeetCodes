@@ -18,6 +18,7 @@ public:
                 count+=st1.top().second;
                 st1.pop();
             }
+
             st1.push({arr[i], count});
 
             left[i]=count;
@@ -34,6 +35,7 @@ public:
             }
 
             st2.push({arr[i], count});
+
             right[i]=count;
         }
 
