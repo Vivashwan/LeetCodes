@@ -1,21 +1,23 @@
 class Solution {
 public:
     int longestWPI(vector<int>& hours) {
-        int maxim=0;
+        int n=hours.size();
 
         unordered_map<int, int>mp;
 
-        int n=hours.size(), sum=0;
+        int maxim=0;
+
+        int sum=0;
 
         for(int right=0; right<n; right++)
         {
-            sum+=hours[right]>8 ? 1:-1;
+            sum+=hours[right]>=9 ? 1:-1;
 
             if(sum>0)
             {
-                maxim=right+1;
+                maxim=max(maxim, right+1);
             }
-            else 
+            else
             {
                 if(mp.find(sum-1)!=mp.end())
                 {
