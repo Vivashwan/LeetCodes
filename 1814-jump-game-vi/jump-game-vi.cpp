@@ -1,28 +1,32 @@
 class Solution {
 public:
     int maxResult(vector<int>& nums, int k) {
-        int n = nums.size();
-        vector<int> dp(n, INT_MIN); 
-        deque<int> dq; 
-        
-        dp[0] = nums[0];  
-        dq.push_back(0); 
+        int n=nums.size();
 
-        for (int i = 1; i < n; i++) 
+        vector<int>dp(n, 0);
+
+        deque<int>d;
+
+        d.push_front(0);
+        dp[0]=nums[0];
+
+        for(int i=1; i<n; i++)
         {
-            if (!dq.empty() && dq.front() < i - k) {
-                dq.pop_front();
+            if(!d.empty() && d.front()<i-k)
+            {
+                d.pop_front();
             }
 
-            dp[i] = nums[i] + dp[dq.front()];
+            dp[i]=nums[i]+dp[d.front()];
 
-            while (!dq.empty() && dp[i] >= dp[dq.back()]) {
-                dq.pop_back();
+            while(!d.empty() && dp[i]>=dp[d.back()])
+            {
+                d.pop_back();
             }
 
-            dq.push_back(i);
+            d.push_back(i);
         }
 
-        return dp[n - 1];
+        return dp[n-1];
     }
 };
