@@ -1,84 +1,83 @@
 struct Node{
-    Node* link[27]={nullptr};
+    Node* links[27]={nullptr};
     bool isLeaf=false;
 
     bool hasKey(char ch)
     {
-        return link[ch-'a'] != nullptr;
-    }
-
-    Node* getKey(char ch)
-    {
-        return link[ch-'a'];
+        return links[ch-'a']!=nullptr;
     }
 
     void putKey(char ch, Node* node)
     {
-        link[ch-'a']=node;
+        links[ch-'a']=node;
     }
 
-    void setEnd()
+    Node* getKey(char ch)
     {
-        isLeaf=true;
+        return links[ch-'a'];
     }
 
     bool isEnd()
     {
         return isLeaf;
     }
-};
 
+    void setEnd()
+    {
+        isLeaf=true;
+    }
+};
 class Trie {
 private:
-    Node* root;
+    Node* node;
 public:
     Trie() {
-        root=new Node();
+        node=new Node();
     }
     
     void insert(string word) {
-        Node* node=root;
+        Node* root=node;
 
         for(int i=0; i<word.length(); i++)
         {
-            if(!node->hasKey(word[i]))
+            if(!root->hasKey(word[i]))
             {
-                node->putKey(word[i], new Node());
+                root->putKey(word[i], new Node());
             }
 
-            node=node->getKey(word[i]);
+            root=root->getKey(word[i]);
         }
 
-        node->setEnd();
+        root->setEnd();
     }
     
     bool search(string word) {
-        Node* node=root;
+        Node* root=node;
 
         for(int i=0; i<word.length(); i++)
         {
-            if(!node->hasKey(word[i]))
+            if(!root->hasKey(word[i]))
             {
                 return false;
             }
 
-            node=node->getKey(word[i]);
+            root=root->getKey(word[i]);
         }
 
-        return node->isEnd();
+        return root->isEnd();
     }
     
     bool startsWith(string prefix) {
-        Node* node=root;
+        Node* root=node;
 
         for(int i=0; i<prefix.length(); i++)
         {
-            if(!node->hasKey(prefix[i]))
+            if(!root->hasKey(prefix[i]))
             {
                 return false;
             }
 
-            node=node->getKey(prefix[i]);
+            root=root->getKey(prefix[i]);
         }
 
         return true;
@@ -86,8 +85,8 @@ public:
 };
 
 /**
- * Your Trie object will be instantiated and called as such:
- * Trie* obj = new Trie();
+ * Your Node object will be instantiated and called as such:
+ * Node* obj = new Node();
  * obj->insert(word);
  * bool param_2 = obj->search(word);
  * bool param_3 = obj->startsWith(prefix);
