@@ -13,16 +13,17 @@ public:
     ListNode* removeZeroSumSublists(ListNode* head) {
         ListNode* dummy=new ListNode(0, head);
 
-        unordered_map<int, ListNode*>mp;
-
         ListNode* curr=dummy;
+
         int sum=0;
+
+        unordered_map<int, ListNode*>mp;
 
         while(curr)
         {
             sum+=curr->val;
 
-            if(mp[sum])
+            if(mp.find(sum)!=mp.end())
             {
                 curr=mp[sum]->next;
 
