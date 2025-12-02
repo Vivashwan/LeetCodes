@@ -1,6 +1,6 @@
 class Solution {
 private:
-    int parent[26];
+    vector<int>parent;
 
     int find(int x)
     {
@@ -17,25 +17,21 @@ private:
     {
         int px=find(x), py=find(y);
 
-        if(px==py)
-        {
-            return;
-        }
-
         if(px<py)
         {
             parent[py]=px;
         }
-        else parent[px]=py;
+        else if(px>py)
+        {
+            parent[px]=py;
+        }
     }
 public:
     string smallestEquivalentString(string s1, string s2, string baseStr) {
         int n=s1.length();
 
-        for(int i=0; i<26; i++)
-        {
-            parent[i]=i;
-        }
+        parent.resize(26);
+        iota(parent.begin(), parent.end(), 0);
 
         for(int i=0; i<n; i++)
         {
@@ -44,10 +40,10 @@ public:
 
         string res=baseStr;
 
-        for(int i=0; i<baseStr.length(); i++)
+        for(int i=0; i<res.length(); i++)
         {
             res[i]=find(baseStr[i]-'a')+'a';
-        }
+        }        
 
         return res;
     }
