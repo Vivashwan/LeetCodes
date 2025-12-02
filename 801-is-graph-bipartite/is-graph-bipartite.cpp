@@ -1,64 +1,39 @@
 class Solution {
-private:
-    vector<int>parent, rank;
-
-    int find(int x) 
-    {
-        if(parent[x]!=x)
-        {    
-            parent[x]=find(parent[x]);
-        }
-
-        return parent[x];
-    }
-
-    void unite(int x, int y) 
-    {
-        int px=find(x), py=find(y);
-
-        if(px==py)
-        { 
-            return;
-        }
-
-        if(rank[px]<rank[py])
-        { 
-            swap(px, py);
-        }
-
-        parent[py]=px;
-
-        if(rank[px]==rank[py])
-        { 
-            rank[px]++;
-        }
-    }
-    
 public:
     bool isBipartite(vector<vector<int>>& graph) {
         int n=graph.size();
 
-        parent.resize(n);
-        rank.resize(n, 0);
-        iota(parent.begin(), parent.end(), 0);
+        vector<int>color(n, -1);
 
-        for(int u=0; u<n; u++) 
+        for(int i=0; i<n; i++)
         {
-            if(graph[u].empty())
-            { 
-                continue;
-            }
-
-            int firstNeighbor=graph[u][0];
-
-            for(int v: graph[u]) 
+            if(color[i]==-1)
             {
-                if(find(u)==find(v))
-                {    
-                    return false;
-                }
+                color[i]=0;
 
-                unite(firstNeighbor, v);
+                queue<int>q;
+
+                q.push(i);
+
+                while(!q.empty())
+                {
+                    auto u=q.front();
+                    q.pop();
+
+                    for(auto v: graph[u])
+                    {
+                        if(color[v]==-1)
+                        {
+                            color[v]=1-color[u];
+
+                            q.push(v);
+                        }
+                        else if(color[v]==color[u])
+                        {
+                            return false;
+                        }
+                    }
+                }
             }
         }
 
