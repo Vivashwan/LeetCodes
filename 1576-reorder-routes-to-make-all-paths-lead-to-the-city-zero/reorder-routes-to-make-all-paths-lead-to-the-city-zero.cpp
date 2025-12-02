@@ -2,32 +2,27 @@ class Solution {
 private:
     int count=0;
 
-    void func(int u, unordered_map<int, vector<pair<int, int>>>&mp, vector<bool>&visited)
+    void func(int ind, unordered_map<int, vector<pair<int, int>>>&mp, vector<bool>&visited)
     {
-        visited[u]=true;
+        visited[ind]=true;
 
-        for(auto it: mp[u])
+        for(auto it: mp[ind])
         {
-            int nextNode=it.first, dir=it.second;
-
-            if(!visited[nextNode])
+            if(!visited[it.first])
             {
-                count+=dir;
-                func(nextNode, mp, visited);
+                count+=it.second;
+                func(it.first, mp, visited);
             }
         }
     }
-
 public:
     int minReorder(int n, vector<vector<int>>& connections) {
         unordered_map<int, vector<pair<int, int>>>mp;
 
         for(auto it: connections)
         {
-            int from=it[0], to=it[1];
-
-            mp[from].push_back({to, 1});
-            mp[to].push_back({from, 0});
+            mp[it[0]].push_back({it[1], 1});
+            mp[it[1]].push_back({it[0], 0});
         }
 
         vector<bool>visited(n, false);
