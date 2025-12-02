@@ -7,11 +7,11 @@ public:
 
         queue<pair<int, int>>q;
 
-        for(int i=0; i<n; i++) 
+        for(int i=0; i<n; i++)
         {
-            for(int j=0; j<m; j++) 
+            for(int j=0; j<m; j++)
             {
-                if(mat[i][j]==0) 
+                if(mat[i][j]==0)
                 {
                     dist[i][j]=0;
                     q.push({i, j});
@@ -21,23 +21,23 @@ public:
 
         int dirX[4]={-1, 0, 0, 1}, dirY[4]={0, -1, 1, 0};
 
-        while(!q.empty()) 
+        while(!q.empty())
         {
             auto [row, col]=q.front();
             q.pop();
 
-            for(int k=0; k<4; k++) 
+            for(int k=0; k<4; k++)
             {
                 int newRow=row+dirX[k], newCol=col+dirY[k];
 
-                if(newRow>=0 && newRow<n && newCol>=0 && newCol<m) 
+                if(newRow>=0 && newRow<n && newCol>=0 && newCol<m)
                 {
-                    if(dist[newRow][newCol]>dist[row][col]+1) 
+                    if(dist[newRow][newCol]>dist[row][col]+1)
                     {
                         dist[newRow][newCol]=dist[row][col]+1;
                         q.push({newRow, newCol});
                     }
-                }
+                }                
             }
         }
 
