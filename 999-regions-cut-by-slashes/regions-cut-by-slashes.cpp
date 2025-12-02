@@ -1,6 +1,6 @@
 class Solution {
 private:
-    vector<int>parent, size;
+    vector<int>parent, rank;
 
     int find(int x)
     {
@@ -17,31 +17,25 @@ private:
     {
         int px=find(x), py=find(y);
 
-        if(px==py)
-        {
-            return;
-        }
-        else if(size[px]>size[py])
+        if(rank[px]>rank[py])
         {
             parent[py]=px;
         }
-        else if(size[px]<size[py])
+        else if(rank[py]>rank[px])
         {
             parent[px]=py;
         }
         else
         {
             parent[py]=px;
-            size[px]++;
+            rank[px]++;
         }
     }
-
 public:
     int regionsBySlashes(vector<string>& grid) {
         int n=grid.size();
-
         parent.resize(4*n*n);
-        size.resize(4*n*n, 1);
+        rank.resize(4*n*n, 0);
 
         iota(parent.begin(), parent.end(), 0);
 
@@ -59,24 +53,24 @@ public:
                 else if(grid[i][j]=='\\')
                 {
                     unite(id, id+1);
-                    unite(id+2, id+3);
+                    unite(id+3, id+2);
                 }
                 else
                 {
                     unite(id, id+1);
                     unite(id+1, id+2);
                     unite(id+2, id+3);
-                    unite(id, id+3);
-                }
-
-                if(j+1<n)
-                {
-                    unite(4*(i*n+j)+1, 4*(i*n+j+1)+3);
+                    unite(id+3, id);
                 }
 
                 if(i+1<n)
                 {
-                    unite(4*(i*n+j)+2, 4*((i+1)*n+j)+0);
+                    unite(id+2, 4*((i+1)*n+j));
+                }
+
+                if(j+1<n)
+                {
+                    unite(id+1, 4*(i*n+j+1)+3);
                 }
             }
         }
@@ -90,7 +84,7 @@ public:
                 count++;
             }
         }
-
+        
         return count;
     }
 };
