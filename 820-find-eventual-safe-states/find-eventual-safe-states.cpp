@@ -3,22 +3,20 @@ public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
         int n=graph.size();
 
-        vector<vector<int>>reverseGraph(n);
+        vector<vector<int>>reversedGraph(n);
 
         vector<int>outDegree(n, 0);
 
-        for(int u=0; u<n; u++)
+        for(int u = 0; u < n; u++)
         {
-            outDegree[u]=graph[u].size();
-
-            for(auto v: graph[u])
+            outDegree[u] = graph[u].size();
+            for (int v : graph[u])
             {
-                reverseGraph[v].push_back(u);
+                reversedGraph[v].push_back(u);
             }
         }
 
         queue<int>q;
-        vector<int>safeNodes;
 
         for(int i=0; i<n; i++)
         {
@@ -28,26 +26,27 @@ public:
             }
         }
 
+        vector<int>res;
+
         while(!q.empty())
         {
-            int node=q.front();
+            auto it=q.front();
             q.pop();
 
-            safeNodes.push_back(node);
+            res.push_back(it);
 
-            for(auto prev: reverseGraph[node])
+            for(auto v: reversedGraph[it])
             {
-                outDegree[prev]--;
+                outDegree[v]--;
 
-                if(outDegree[prev]==0)
+                if(outDegree[v]==0)
                 {
-                    q.push(prev);
+                    q.push(v);
                 }
             }
         }
 
-        sort(safeNodes.begin(), safeNodes.end());
-
-        return safeNodes;
+        sort(res.begin(), res.end());
+        return res;
     }
 };
