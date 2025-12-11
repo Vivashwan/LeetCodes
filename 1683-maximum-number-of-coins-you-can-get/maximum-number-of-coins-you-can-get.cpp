@@ -1,23 +1,21 @@
 class Solution {
 public:
     int maxCoins(vector<int>& piles) {
-        int n = piles.size();
+        int n=piles.size();
 
         sort(piles.begin(), piles.end());
 
-        int res=0;
+        int bobPointer=0, playerPointer=n-2;
 
-        int j = n-2, i = 0;
+        int total=0;
 
-        while(j>=0)
+        while(bobPointer<playerPointer)
         {
-            res+=piles[j];
-            j-=2;
-
-            piles[i]=0;
-            i++;
+            total+=piles[playerPointer];
+            playerPointer-=2;
+            bobPointer++;
         }
 
-        return res;
+        return total;
     }
 };
