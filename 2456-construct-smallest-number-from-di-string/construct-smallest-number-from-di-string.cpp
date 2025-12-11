@@ -4,45 +4,46 @@ public:
         int n=pattern.size();
         int count=1;
 
-        string res="";
+        string str="";
 
         for(int i=0; i<n; i++)
         {
             if(pattern[i]=='I')
             {
-                res+=count+'0';
+                str+=(count+'0');
                 count++;
             }
             else
             {
-                stack<char>st;
+                int j=i;
 
-                while(i<n && pattern[i]=='D')
+                stack<int>st;
+
+                while(j<n && pattern[j]=='D')
                 {
-                    cout<<count<<" "<<i<<endl;
-                    st.push(count+'0');
+                    st.push(count);
                     count++;
-                    i++;
+                    j++;
                 }
 
-                cout<<count<<" "<<i<<endl;
-
-                st.push(count+'0');
+                st.push(count);
                 count++;
 
                 while(!st.empty())
                 {
-                    res+=st.top();
+                    str+=st.top()+'0';
                     st.pop();
                 }
+
+                i=j;
             }
         }
 
-        if(res.size()<n+1) 
+        if(str.length()<n+1)
         {
-            res+=count+'0';
+            str+=count+'0';
         }
 
-        return res;
+        return str;
     }
 };
