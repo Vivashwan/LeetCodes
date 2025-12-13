@@ -1,18 +1,20 @@
 class Solution {
 public:
     int minPairSum(vector<int>& nums) {
-
-        int n = nums.size();
+        int n=nums.size();
 
         sort(nums.begin(), nums.end());
 
-        long long maxim = INT_MIN;
+        int left=0, right=n-1;
 
-        for(int i=0; i<n; i++)
+        int maxim=INT_MIN;
+
+        while(left<right)
         {
-            maxim = max(maxim, (long long)nums[n-1-i]+nums[i]);
+            maxim=max(maxim, nums[left]+nums[right]);
+            left++, right--;
         }
 
-        return (int)maxim;  
+        return maxim;
     }
 };
