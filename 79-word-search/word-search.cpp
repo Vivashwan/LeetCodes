@@ -1,45 +1,49 @@
 class Solution {
 private:
-    bool dfs(vector<vector<char>>&board, string&word, int r, int c, int index) 
+    bool isFound=false;
+
+    void func(vector<vector<char>>& board, string& word, vector<vector<int>>& visited, int n, int m, int l, int row, int col, int ind)
     {
-        if(index==word.size())
-        { 
-            return true;
+        if(ind==l)
+        {
+            isFound=true;
+            return;
         }
 
-        if(r<0 || c<0 || r>=board.size() || c>=board[0].size() || board[r][c]!=word[index]) 
-        {    
-            return false;
+        int dirX[4]={1, 0, -1, 0};
+        int dirY[4]={0, 1, 0, -1};
+
+        for(int k=0; k<4; k++)
+        {
+            int newDirX=row+dirX[k], newDirY=col+dirY[k];
+
+            if(newDirX>=0 && newDirX<n && newDirY>=0 && newDirY<m && !visited[newDirX][newDirY] && board[newDirX][newDirY]==word[ind])
+            {
+                visited[newDirX][newDirY]=true;
+                func(board, word, visited, n, m, l, newDirX, newDirY, ind+1);
+                visited[newDirX][newDirY]=false;
+            }
         }
-
-        char temp=board[r][c];
-        board[r][c]='#';
-
-        bool found=dfs(board, word, r+1, c, index+1) ||
-                    dfs(board, word, r-1, c, index+1) ||
-                    dfs(board, word, r, c+1, index+1) ||
-                    dfs(board, word, r, c-1, index+1);
-
-        board[r][c]=temp;
-
-        return found;
     }
-
 public:
     bool exist(vector<vector<char>>& board, string word) {
-        int rows=board.size(), cols=board[0].size();
+        int n=board.size(), m=board[0].size(), l=word.length();
 
-        for(int i=0; i<rows; i++)
+        vector<vector<int>>visited(n, vector<int>(m, false));
+
+        for(int i=0; i<n; i++)
         {
-            for(int j=0; j<cols; j++)
+            for(int j=0; j<m; j++)
             {
-                if(dfs(board, word, i, j, 0))
-                { 
-                    return true;
+                if(board[i][j]==word[0])
+                {
+                    visited[i][j]=true;
+                    func(board, word, visited, n, m, l, i, j, 1);
+                    visited[i][j]=false;
                 }
             }
         }
 
-        return false;
+        return isFound;
     }
 };
