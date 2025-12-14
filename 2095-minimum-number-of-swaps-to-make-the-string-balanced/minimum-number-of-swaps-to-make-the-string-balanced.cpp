@@ -1,7 +1,7 @@
 class Solution {
 public:
     int minSwaps(string s) {
-        int size = 0;
+        int size=0;
 
         for(int i=0; i<s.length(); i++)
         {
