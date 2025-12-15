@@ -1,22 +1,27 @@
 class Solution {
 public:
     int minAddToMakeValid(string s) {
-        int open = 0;        // count of unmatched '('
-        int insertions = 0;  // count of unmatched ')'
+        int open=0, insertions=0;
 
-        for (char ch : s) {
-            if (ch == '(') {
+        for(int i=0; i<s.length(); i++)
+        {
+            if(s[i]=='(')
+            {
                 open++;
-            } else { // ch == ')'
-                if (open > 0) {
-                    open--; // match it with an open '('
-                } else {
-                    insertions++; // no '(' to match, need to insert one
+            }
+            else
+            {
+                if(open>0)
+                {
+                    open--;
+                }
+                else
+                {
+                    insertions++;
                 }
             }
         }
 
-        // Total insertions needed = unmatched '(' + unmatched ')'
-        return open + insertions;
+        return open+insertions;
     }
 };
