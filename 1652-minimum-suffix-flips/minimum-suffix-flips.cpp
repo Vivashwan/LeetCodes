@@ -1,19 +1,21 @@
 class Solution {
 public:
     int minFlips(string target) {
-        int n = target.size();
-        int flips = 0;
-        char current = '0';
+        int n=target.length();
 
-        for (int i = 0; i < n; i++) 
+        int count=0;
+
+        char curr='0';
+
+        for(int i=0; i<n; i++)
         {
-            if (target[i] != current) 
+            if(curr!=target[i])
             {
-                flips++;
-                current = target[i]; 
+                curr=target[i];
+                count++;
             }
         }
-        
-        return flips;
+
+        return count;
     }
 };
