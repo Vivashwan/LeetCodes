@@ -1,48 +1,46 @@
 class Solution {
 public:
     string repeatLimitedString(string s, int repeatLimit) {
-        vector<int>freq(26, 0);
+        unordered_map<char, int>mp;
 
-        for(char ch: s)
-        {    
-            freq[ch -'a']++;
+        for(auto it: s)
+        {
+            mp[it]++;
         }
 
         priority_queue<pair<char, int>>pq;
 
-        for(int i=25; i>=0; i--) 
+        for(auto it: mp)
         {
-            if(freq[i]>0)
-            {    
-                pq.push({(char)(i+'a'), freq[i]});
-            }
+            pq.push({it.first, it.second});
         }
 
-        string result;
+        string res;
 
-        while(!pq.empty()) 
+        while(!pq.empty())
         {
-            auto [ch1, count1]=pq.top(); 
+            auto [ch1, count1]=pq.top();
             pq.pop();
 
-            int use = min(repeatLimit, count1);
-            result.append(use, ch1);
-            count1-=use;
+            int mini=min(repeatLimit, count1);
+            res.append(mini, ch1);
+            count1-=mini;
 
-            if(count1>0) 
+            if(count1>0)
             {
                 if(pq.empty())
-                { 
+                {
                     break;
                 }
 
-                auto [ch2, count2]=pq.top(); pq.pop();
+                auto [ch2, count2]=pq.top();
+                pq.pop();
 
-                result.push_back(ch2);
+                res.push_back(ch2);
                 count2--;
 
                 if(count2>0)
-                {    
+                {
                     pq.push({ch2, count2});
                 }
 
@@ -50,6 +48,6 @@ public:
             }
         }
 
-        return result;
+        return res;
     }
 };
