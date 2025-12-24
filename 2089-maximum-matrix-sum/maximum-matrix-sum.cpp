@@ -1,10 +1,10 @@
 class Solution {
 public:
     long long maxMatrixSum(vector<vector<int>>& matrix) {
-        int n = matrix.size(), m = matrix[0].size();
+        int n=matrix.size(), m=matrix[0].size();
 
-        long long sum = 0;
-        int negCount = 0, minVal = INT_MAX;
+        int mini=INT_MAX, negCount=0;
+        long long sum=0;
 
         for(int i=0; i<n; i++)
         {
@@ -17,10 +17,10 @@ public:
                     negCount++;
                 }
 
-                minVal = min(minVal, abs(matrix[i][j]));
+                mini=min(mini, abs(matrix[i][j]));
             }
         }
 
-        return negCount%2==0 ? sum : sum-2*minVal;
+        return negCount%2==0 ? sum : sum-2*mini;
     }
 };
