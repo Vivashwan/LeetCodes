@@ -1,43 +1,49 @@
 class Solution {
-    void getCount(string str, string sub, int& cnt1, int& cnt2) {
-    
-        char first = sub[0], second = sub[1];
-        int i = 1;
-        while(i < str.length()) {
-            if(i > 0 && str[i-1] == first && str[i] == second) {
-                cnt1++;
-                str.erase(i-1, 2);
-                i--;
-                continue;
+private:
+    string func(string& s, string substring, int x, int &count)
+    {
+        stack<char>st;
+
+        for(char c: s)
+        {
+            if(!st.empty() && st.top()==substring[0] && c==substring[1])
+            {
+                st.pop();
+                count+=x;
             }
-            i++;
+            else
+            {
+                st.push(c);
+            }
         }
 
-        i = 1;
-        while(i < str.length()) {
-            if(i > 0 && str[i-1] == second && str[i] == first) {
-                cnt2++;
-                str.erase(i-1, 2);
-                i--;
-                continue;
-            }
-            i++;
+        string str="";
+
+        while(!st.empty())
+        {
+            str += st.top();
+            st.pop();
         }
-        return;
+
+        reverse(str.begin(), str.end());
+        return str;
     }
+
 public:
     int maximumGain(string s, int x, int y) {
-        
-        int mxABcnt = 0;
-        int mxBAcnt = 0;
-        int minBAcnt = 0;
-        int minABcnt= 0;
+        int count=0;
 
-        getCount(s, "ab", mxABcnt, minBAcnt);
-        getCount(s, "ba", mxBAcnt, minABcnt);
+        if(x>=y)
+        {
+            s=func(s, "ab", x, count);
+            s=func(s, "ba", y, count);
+        }
+        else
+        {
+            s=func(s, "ba", y, count);
+            s=func(s, "ab", x, count);
+        }
 
-        int operation1 = mxABcnt * x + minBAcnt * y;
-        int operation2 = mxBAcnt * y + minABcnt * x;
-        return max(operation1, operation2);
+        return count;
     }
 };
