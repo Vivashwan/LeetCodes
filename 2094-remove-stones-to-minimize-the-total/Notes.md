@@ -1,0 +1,1 @@
+<h2>remove-stones-to-minimize-the-total Notes</h2><hr>[ Time taken: 19 m 48 s ]
