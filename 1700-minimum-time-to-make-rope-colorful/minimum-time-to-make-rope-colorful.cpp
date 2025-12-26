@@ -1,33 +1,50 @@
 class Solution {
 public:
     int minCost(string colors, vector<int>& neededTime) {
-        int n = colors.length();
+        int n=colors.size();
 
-        int minCost = 0;
-
-        for(int i=1; i<n;)
+        if(n==1)
         {
-            if(colors[i]!=colors[i-1])
-            {
-                i++;
-            }
-            else
-            {
-                int sum = neededTime[i-1];
-                int maxi = neededTime[i-1];
+            return 0;
+        }
 
-                while(i<n && colors[i-1]==colors[i])
+        stack<pair<char, int>>st;
+
+        st.push({colors[0], neededTime[0]});
+
+        int count=0;
+
+        for(int i=1; i<n; i++)
+        {
+            if(!st.empty() && st.top().first==colors[i])
+            {
+                if(st.top().second <= neededTime[i])
                 {
-                    sum+=neededTime[i];
+                    count+=st.top().second;
+                    st.pop();
 
-                    maxi = max(maxi, neededTime[i]);
-                    i++;
+                    st.push({colors[i], neededTime[i]});
+                }
+                else if(neededTime[i] < st.top().second)
+                {
+                    count+=neededTime[i];
+                }
+            }
+            else if(!st.empty() && st.top().first!=colors[i])
+            {
+                while(!st.empty())
+                {
+                    st.pop();
                 }
 
-                minCost+=(sum-maxi);
+                st.push({colors[i], neededTime[i]});
+            }
+            else if(st.empty())
+            {
+                st.push({colors[i], neededTime[i]});
             }
         }
 
-        return minCost;
+        return count;
     }
 };
