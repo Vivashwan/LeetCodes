@@ -5,15 +5,15 @@ public:
 
         while(k--)
         {
-            int val = pq.top();
+            int val=pq.top();
             pq.pop();
 
-            int newVal = floor(val/2);
+            int newVal=floor(val/2);
 
             pq.push(val-newVal);
         }
 
-        int sum = 0;
+        int sum=0;
 
         while(!pq.empty())
         {
