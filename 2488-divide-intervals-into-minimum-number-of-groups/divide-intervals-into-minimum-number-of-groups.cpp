@@ -12,7 +12,7 @@ public:
         sort(start.begin(), start.end());
         sort(end.begin(), end.end());
 
-        int count = 0, j = 0;
+        int count=0, j=0;
 
         for(auto it: start)
         {
