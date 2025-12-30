@@ -1,7 +1,7 @@
 class Solution {
 public:
     bool winnerOfGame(string colors) {
-        int n = colors.size();
+        int n=colors.size();
 
         if(n<3) 
         {
@@ -14,7 +14,7 @@ public:
         {
             if(colors[i]==colors[i-1] && colors[i]==colors[i+1]) 
             {
-                if(colors[i] == 'A') 
+                if(colors[i]=='A') 
                 {
                     a++;
                 }
@@ -25,4 +25,3 @@ public:
         return a>b;
     }
 };
-
