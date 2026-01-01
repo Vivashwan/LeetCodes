@@ -1,43 +1,20 @@
 class Solution {
 public:
     int minOperations(vector<int>& nums) {
-        int n = nums.size(), res=0;
+        int addOneOps=0, highestSetBit=0;
 
-        while(true)
+        for(int i=0; i<=30; i++)
         {
-            int evenCount=0, countZero=0;
-
-            for(int i=0; i<n; i++)
+            for(auto it: nums)
             {
-                if(nums[i]%2!=0)
+                if((it&(1<<i)))
                 {
-                    nums[i]-=1;
-                    res++;
-                }
-                else evenCount++;
-
-                if(nums[i]==0)
-                {
-                    countZero++;
-                }
-            }
-
-            if(countZero==n)
-            {
-                return res;
-            }
-
-            if(evenCount==n)
-            {
-                res++;
-
-                for(int i=0; i<n; i++)
-                {
-                    nums[i]/=2;
+                    addOneOps++;
+                    highestSetBit=i;
                 }
             }
         }
 
-        return res;
+        return addOneOps+highestSetBit;
     }
 };
