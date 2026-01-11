@@ -1,17 +1,31 @@
 class Solution {
 public:
     int minDeletions(string s) {
-         map<int,int>mp;
-        for(auto ch:s) mp[ch]++;
+        vector<int>freq(26, 0);
 
-        int ans = 0;
-        set<int> st;
-        for(auto [ch, cnt]:mp)
+        for(auto it: s)
         {
-            while(cnt and st.count(cnt)) 
-                ans++, cnt--;
-            st.insert(cnt);
+            freq[it-'a']++;
         }
-        return ans;
+
+        set<int>st;
+
+        int count=0;
+
+        for(int i=0; i<26; i++)
+        {
+            while(freq[i]>0 && st.count(freq[i]))
+            {
+                freq[i]--;
+                count++;
+            }
+
+            if(freq[i]>0)
+            {
+                st.insert(freq[i]);
+            }
+        }
+
+        return count;
     }
 };
