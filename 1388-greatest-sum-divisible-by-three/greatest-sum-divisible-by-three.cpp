@@ -1,24 +1,43 @@
 class Solution {
 public:
-    int maxSumDivThree(vector<int>& vec) {
-        
-        int n=vec.size();
+    int maxSumDivThree(vector<int>& nums) {
+        vector<int>r1, r2;
 
-        vector<vector<int>>dp(n+1, vector<int>(3));
-    
-        dp[0][0]=0, dp[0][1]=INT_MIN, dp[0][2]=INT_MIN;
+        int sum=0;
 
-        for(int i=1; i<=n; i++)
+        for(auto it: nums)
         {
-            int ind=i-1;
-            
-            dp[i][0]=max(dp[i-1][0], dp[i-1][(vec[ind])%3]+vec[ind]);
-    
-            dp[i][1]=max(dp[i-1][1], dp[i-1][(vec[ind]+1)%3]+vec[ind]);
-            
-            dp[i][2]=max(dp[i-1][2], dp[i-1][(vec[ind]+2)%3]+vec[ind]);
+            sum+=it;
+
+            if(it%3==1)
+            {
+                r1.push_back(it);
+            }
+            else if(it%3==2)
+            {
+                r2.push_back(it);
+            }
         }
 
-        return dp[n][0];
+        if(sum%3==0)
+        {
+            return sum;
+        }
+
+        sort(r1.begin(), r1.end());
+        sort(r2.begin(), r2.end());
+
+        if(sum%3==1)
+        {
+            int remove1=(r1.size()>=1) ? r1[0]:INT_MAX;
+            int remove2=(r2.size()>=2) ? r2[0]+r2[1]:INT_MAX;
+
+            return sum-min(remove1, remove2);
+        }
+
+        int remove1=(r2.size()>=1) ? r2[0]:INT_MAX;
+        int remove2=(r1.size()>=2) ? r1[0]+r1[1]:INT_MAX;
+
+        return sum-min(remove1, remove2);
     }
 };
