@@ -1,20 +1,32 @@
 class Solution {
+private:
+    static bool myCmp(vector<int>&a, vector<int>&b)
+    {
+        if(a[1]==b[1])
+        {
+            return a[0]<b[0];
+        }
+
+        return a[1]<b[1];
+    }
 public:
     int eraseOverlapIntervals(vector<vector<int>>& intervals) {
-        sort(intervals.begin(), intervals.end(), [](vector<int>&a, vector<int>&b)
-        {
-            return a[1]<b[1];
-        });
+        int n=intervals.size();
 
-        int count=0, end=INT_MIN;
+        sort(intervals.begin(), intervals.end(), myCmp);
 
-        for(auto it: intervals) 
+        int count=0, end=intervals[0][1];
+
+        for(int i=1; i<n; i++)
         {
-            if(it[0]>=end) 
+            if(end<=intervals[i][0])
             {
-                end=it[1];
-            } 
-            else count++;
+                end=intervals[i][1];
+            }
+            else
+            {
+                count++;
+            }
         }
 
         return count;
