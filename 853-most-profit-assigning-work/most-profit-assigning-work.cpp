@@ -1,32 +1,30 @@
 class Solution {
 public:
     int maxProfitAssignment(vector<int>& difficulty, vector<int>& profit, vector<int>& worker) {
-        int n=profit.size();
+        vector<pair<int, int>>jobs;
 
-        unordered_map<int, vector<int>>mp;
-
-        for(auto workerStrength: worker)
+        for(int i=0; i<difficulty.size(); i++) 
         {
-            int val=0;
+            jobs.push_back({difficulty[i], profit[i]});
+        }
 
-            for(int i=0; i<n; i++)
+        sort(jobs.begin(), jobs.end());
+
+        sort(worker.begin(), worker.end());
+
+        int ans=0, i=0, best=0;
+
+        for(int workerStrength: worker) 
+        {
+            while(i<jobs.size() && workerStrength >= jobs[i].first) 
             {
-                if(workerStrength>=difficulty[i])
-                {
-                    val=max(val, profit[i]);
-                }
+                best=max(best, jobs[i].second);
+                i++;
             }
-
-            mp[workerStrength].push_back(val);
+            
+            ans+=best;
         }
 
-        int total=0;
-
-        for(auto it: mp)
-        {
-            total+=accumulate(it.second.begin(), it.second.end(), 0);
-        }
-
-        return total;
+        return ans;
     }
 };
