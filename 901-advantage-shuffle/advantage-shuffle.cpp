@@ -1,24 +1,35 @@
 class Solution {
 public:
     vector<int> advantageCount(vector<int>& nums1, vector<int>& nums2) {
-        int n = nums1.size();
+        map<int, int>freq;
 
-        multiset<int>ms(begin(nums1), end(nums1));
-
-        for(int i=0; i<n; i++)
+        for(int x: nums1) 
         {
-            auto it=ms.upper_bound(nums2[i]);
-
-            if(it==end(ms))
-            {
-                it=begin(ms);
-            }
-
-            nums1[i]=*it;
-
-            ms.erase(it);
+            freq[x]++;
         }
-
-        return nums1;
+        
+        int n=nums2.size();
+        vector<int>ans(n);
+        
+        for(int i=0; i<n; i++) 
+        {
+            auto it=freq.upper_bound(nums2[i]);
+            
+            if(it==freq.end()) 
+            {
+                it=freq.begin();
+            }
+            
+            ans[i]=it->first;
+            
+            it->second--;
+            
+            if(it->second==0) 
+            {
+                freq.erase(it);
+            }
+        }
+        
+        return ans;
     }
 };
