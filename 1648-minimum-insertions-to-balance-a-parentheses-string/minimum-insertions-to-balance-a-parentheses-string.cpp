@@ -1,7 +1,7 @@
 class Solution {
 public:
     int minInsertions(string s) {
-        int n = s.length();
+        int n=s.length();
 
         int count=0;
 
@@ -11,7 +11,8 @@ public:
         {
             if(i+1<n && s[i]==')' && s[i+1]==')' && st.empty())
             {
-                count++, i++;
+                count++;
+                i++;
             }
             else if(i+1<n && s[i]==')' && s[i+1]==')')
             {
@@ -27,7 +28,10 @@ public:
                 count++;
                 st.pop();
             }
-            else st.push(s[i]);
+            else
+            {
+                st.push(s[i]);
+            }
         }
 
         return count+st.size()*2;
