@@ -2,21 +2,22 @@ class Solution {
 public:
     vector<int> mostCompetitive(vector<int>& nums, int k) {
         int n=nums.size();
-        vector<int>st;
+        vector<int>res;
 
         for(int i=0; i<n; i++)
         {
-            while(!st.empty() && nums[i]<st.back() && (st.size()-1+n-i)>=k)
+            while(!res.empty() && res.back()>nums[i] && (res.size()-1)+(n-i)
+>=k)
             {
-                st.pop_back();
+                res.pop_back();
             }
 
-            if(st.size()<k)
+            if(res.size()<k)
             {
-                st.push_back(nums[i]);
+                res.push_back(nums[i]);
             }
         }
 
-        return st;
+        return res;
     }
 };
