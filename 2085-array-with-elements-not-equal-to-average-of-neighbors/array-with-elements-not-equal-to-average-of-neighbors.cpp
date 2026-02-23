@@ -1,7 +1,7 @@
 class Solution {
 public:
     vector<int> rearrangeArray(vector<int>& nums) {
-        int n = nums.size();
+        int n=nums.size();
 
         for(int i=1; i<n-1; i++)
         {
