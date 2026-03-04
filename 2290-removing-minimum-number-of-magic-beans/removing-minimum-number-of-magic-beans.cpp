@@ -1,28 +1,28 @@
 class Solution {
 public:
     long long minimumRemoval(vector<int>& beans) {
-        long long n = beans.size();
+        long long n=beans.size();
 
-        sort(beans.begin(), beans.end());
-
-        long long sum = 0;
+        long long sum=0;
 
         for(auto it: beans)
         {
             sum+=it;
         }
 
-        long long mini = LLONG_MAX;
+        long long res=LLONG_MAX;
+
+        sort(beans.begin(), beans.end());
 
         for(int i=0; i<n; i++)
         {
-            long long temp = sum;
+            long long temp=sum;
 
-            temp -= (n-i)*beans[i];
+            temp-=(n-i)*beans[i];
 
-            mini = min(mini, temp);
+            res=min(res, temp);
         }
 
-        return mini;
+        return res;
     }
 };
