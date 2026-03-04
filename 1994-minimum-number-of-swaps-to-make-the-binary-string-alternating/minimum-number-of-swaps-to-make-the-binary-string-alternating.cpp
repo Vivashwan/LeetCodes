@@ -1,70 +1,51 @@
 class Solution {
-public:
-    int minSwaps(string s) {
-        int z=0,o=0;
-        int n=s.length();
+private:
+    int canMake(string&s, char expectedChar, int n)
+    {
+        int count=0;
 
-        for(int i=0;i<n;i++)
+        for(int i=0; i<n; i++)
         {
-            if(s[i]=='0')
+            if(s[i]!=expectedChar)
             {
-                z++;
+                count++;
             }
-            else o++;
+
+            expectedChar=(expectedChar=='0') ? '1':'0';
         }
 
-        if(abs(z-o)>1)
-        { 
+        return count;
+    }
+public:
+    int minSwaps(string s) {
+        int n=s.length();
+
+        int count1=0, count0=0;
+
+        for(auto it: s)
+        {
+            if(it=='0')
+            {
+                count0++;
+            }
+            else count1++;
+        }
+
+        if(abs(count0-count1)>1)
+        {
             return -1;
         }
 
-        string s1="",s2="";
-
-        for(int i=0;i<n;i++)
+        if(count0==count1)
         {
-            if(i%2==0)
-            {
-                s1+='0';
-                s2+='1';
-            }
-            else
-            {
-                s1+='1';
-                s2+='0';
-            }
+            return min(canMake(s, '0', n)/2, canMake(s, '1', n)/2);
         }
 
-        int c1=0,c2=0;
-
-        if(z==o)
+        if(count0<count1)
         {
-            for(int i=0;i<n;i++)
-            {
-                if(s[i]!=s1[i])
-                {
-                    c1++;
-                }
-
-                if(s[i]!=s2[i])
-                { 
-                    c2++;
-                }
-            }
-            return min(c1/2, c2/2);
+            return canMake(s, '1', n)/2;
         }
 
-        if(o>z)
-        { 
-            s1=s2;
-        }
-
-        for(int i=0;i<n;i++)
-        {
-            if(s[i]!=s1[i])
-            {
-                c1++;
-            }
-        }
-        return c1/2;
+        return canMake(s, '0', n)/2;
     }
 };
