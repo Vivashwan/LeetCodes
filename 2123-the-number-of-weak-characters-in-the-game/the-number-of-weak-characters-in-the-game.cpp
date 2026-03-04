@@ -11,11 +11,11 @@ private:
     }
 public:
     int numberOfWeakCharacters(vector<vector<int>>& properties) {
-        int n = properties.size();
+        int n=properties.size();
 
         sort(properties.begin(), properties.end(), myCmp);
 
-        int count = 0, maxi = INT_MIN;
+        int count=0, maxi=INT_MIN;
 
         for(int i=n-1; i>=0; i--)
         {
@@ -24,9 +24,9 @@ public:
                 count++;
             }
 
-            maxi = max(maxi, properties[i][1]);
+            maxi=max(maxi, properties[i][1]);
         }
-        
+
         return count;
     }
 };
