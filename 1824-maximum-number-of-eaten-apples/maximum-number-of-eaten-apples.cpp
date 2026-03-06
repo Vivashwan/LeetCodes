@@ -1,40 +1,39 @@
 class Solution {
 public:
     int eatenApples(vector<int>& apples, vector<int>& days) {
-        int n = apples.size(), count = 0, i = 0;
+        int n=apples.size(), day=0, eaten=0;
 
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>>pq;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>>pq;
 
-        while(i<n || !pq.empty())
+        while(day<n || !pq.empty())
         {
-            if(i<n && apples[i]>0)
+            if(day<n && apples[day]>0)
             {
-                pq.push({i+days[i], apples[i]});
+                pq.push({day+days[day], apples[day]});
             }
 
-            while(!pq.empty() && (pq.top().first<=i || pq.top().second<=0))
+            while(!pq.empty() && pq.top().first<=day)
             {
                 pq.pop();
             }
 
             if(!pq.empty())
             {
-                auto it = pq.top();
+                auto [expiry, count]=pq.top();
                 pq.pop();
 
-                count++;
+                count--;
+                eaten++;
 
-                it.second-=1;
-
-                if(it.second>0)
+                if(count>0)
                 {
-                    pq.push(it);
+                    pq.push({expiry, count});
                 }
             }
 
-            i++;
+            day++;
         }
 
-        return count;
+        return eaten;
     }
 };
